@@ -1,0 +1,17 @@
+1- Design game
+
+2- Design score keeping
+
+3- Implement following extensions:
+ * get_user_games
+ * cancel_game
+ * get_high_scores
+ * get_user_rankings
+ * get_game_history
+
+4- Implement notifications of unfinished games
+
+5- Write README
+
+6- Explain design decisions in design.txt
+ 
