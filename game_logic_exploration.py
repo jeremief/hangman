@@ -23,6 +23,8 @@ answers = [['tree', 'clear','white'],
 
 difficulty_level = 0
 strikes_left = 0
+user_input = ""
+user_input_valid = 0
 game_over = 0
 won = 0
 answer = ""
@@ -53,7 +55,7 @@ strikes_left = 5
 
 answer = (list(answer))
 
-# ------------------------- START GAME -------------------------------------
+# -------------------------- PLAY GAME -------------------------------------
 
 
 while current_game != answer and game_over !=1:
@@ -62,35 +64,44 @@ while current_game != answer and game_over !=1:
     print " "
     user_input = raw_input("Please enter a letter:")
 
-    if len(user_input) == 1:
-        if user_input.isdigit() == False:
-            if user_input.isalnum() == True:
-                user_input = user_input.upper()
-                if user_input in answer:
-                    for i in answer:
-                        if user_input == i:
-                            for j in range(0,len(current_game)):
-                                if answer[j] == i:
-                                    current_game[j]= user_input
-                    print "CORRECT"
-                    if current_game == answer:
-                        won = 1
-                        display_current_game(current_game)
-                else:
-                    print "WRONG"
-                    strikes_left -= 1
-                    print " "
-                    if strikes_left == 0 :
-                        game_over = 1
-                        won = 0
+    # Validate user input
+    print "\n"
+    user_input_valid = 1
+    if user_input.isdigit() == True:
+        print "Letters only please..."
+        user_input_valid = 0
+    if user_input.isalnum() == False:
+        print "Letters only please..."
+        user_input_valid = 0
+    if len(user_input) != 1:
+        print "Single character please..."
+        user_input_valid = 0
+    print "\n"
 
-
-            else:
-                print "Letters only please... \n"
+    # Test user input against answer
+    if user_input_valid == 1:
+        user_input = user_input.upper()
+        if user_input in answer:
+            for i in answer:
+                if user_input == i:
+                    for j in range(0,len(current_game)):
+                        if answer[j] == i:
+                            current_game[j]= user_input
+            print "CORRECT"
+            if current_game == answer:
+                won = 1
+                display_current_game(current_game)
         else:
-            print "Letters only please... \n"
-    else:
-        print "Single character please... \n"
+            print "WRONG"
+            strikes_left -= 1
+            print " "
+            if strikes_left == 0 :
+                game_over = 1
+                won = 0
+
+    
+
+
  
 # --------------------------- END GAME -------------------------------------
 
