@@ -8,6 +8,12 @@ import random
 # class Player(object):
 #     """Player profile"""
 
+def display_current_game(current_game):
+    display = ""
+    for i in current_game:
+        display += "%s " %i
+    print display
+
 
 # ------------------------ SETTING UP VARIABLES ---------------------------
 
@@ -48,16 +54,15 @@ strikes_left = 5
 answer = (list(answer))
 
 # ------------------------- START GAME -------------------------------------
-print current_game
-print "%i strike(s) left" % strikes_left
-print " "
 
 
 while current_game != answer and game_over !=1:
+    display_current_game(current_game)
+    print "%i strike(s) left" % strikes_left
+    print " "
     user_input = raw_input("Please enter a letter:")
 
     if len(user_input) == 1:
-        # break
         if user_input.isdigit() == False:
             if user_input.isalnum() == True:
                 user_input = user_input.upper()
@@ -67,14 +72,14 @@ while current_game != answer and game_over !=1:
                             for j in range(0,len(current_game)):
                                 if answer[j] == i:
                                     current_game[j]= user_input
-                                    print current_game
-                                    print "%i strike(s) left" % strikes_left
-                                    print " "
-                                    if current_game == answer:
-                                        won = 1
+                    print "CORRECT"
+                    if current_game == answer:
+                        won = 1
+                        display_current_game(current_game)
                 else:
+                    print "WRONG"
                     strikes_left -= 1
-                    print "%i strike(s) left" % strikes_left
+                    print " "
                     if strikes_left == 0 :
                         game_over = 1
                         won = 0
