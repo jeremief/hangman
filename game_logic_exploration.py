@@ -8,6 +8,9 @@ import random
 # class Player(object):
 #     """Player profile"""
 
+
+# ------------------------ SETTING UP VARIABLES ---------------------------
+
 answers = [['tree', 'clear','white'], 
            ['python', 'javascript', 'dentist'], 
            ['mississipi', 'waterloo', 'warringha']]
@@ -16,10 +19,11 @@ difficulty_level = 0
 strikes_left = 0
 game_over = 0
 won = 0
-
 answer = ""
 current_game = ""
 
+
+# ----------------------- INITIALISING GAME PARAMETERS --------------------
 
 while difficulty_level not in [1, 2, 3]:
     difficulty_level = raw_input("Please enter difficuty level 1, 2 or 3:")
@@ -42,6 +46,8 @@ current_game = list(current_game)
 strikes_left = 5
 
 answer = (list(answer))
+
+# ------------------------- START GAME -------------------------------------
 print current_game
 print "%i strike(s) left" % strikes_left
 print " "
@@ -81,6 +87,8 @@ while current_game != answer and game_over !=1:
     else:
         print "Single character please... \n"
  
+# --------------------------- END GAME -------------------------------------
+
 if won == 1:
     print "YOU WON"       
 else:
