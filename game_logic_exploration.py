@@ -1,17 +1,19 @@
 import random
 
+# ------------------------ SETTING UP MODELS -------------------------------
+
+# class Player(object):
+#     """Player profile"""
 
 # class Game(object):
 #     """Game variables"""
 
 
-# class Player(object):
-#     """Player profile"""
-
+# class History(object):
+#    """docstring for History"""
+        
 # class Score(object):
 #    """docstring for Score"""
-
-
 
 def display_current_game(current_game):
     display = ""
