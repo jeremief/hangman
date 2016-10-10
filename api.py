@@ -11,13 +11,14 @@ from protorpc import remote, messages
 from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 
-from models import User 
-from models import StringMessage
+from models import User, Game
+from models import StringMessage, NewGameForm, GameForm
 from utils import get_by_urlsafe
 
 
 USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1),
                                            email=messages.StringField(2))
+NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
 
 
 @endpoints.api(name='hangman', version='v1')
@@ -37,6 +38,24 @@ class HangmanApi(remote.Service):
         user.put()
         return StringMessage(message='User {} created!'.format(
                 request.user_name))
+
+    @endpoints.method(request_message=NEW_GAME_REQUEST,
+                      response_message=GameForm,
+                      path='game',
+                      name='create_new_game_api_name',
+                      http_method='POST')
+    def create_new_game_api(self, request):
+        """ Create a new game. Requires an exiting user"""
+        user = User.query(User.name == request.user_name).get()
+        if not user:
+            raise endpoints.NotFoundException('There is no user with that name!')
+        try:
+            game = Game.create_new_game_models(user.key, request.answer, request.strikes)
+        except ValueError:
+            raise endpoints.BadRequestException('You really really need a positive number of strikes')
+        # The taskqueue job will go here
+        return game.to_form('Have fun playing Hangman!')
+
 
 
 api = endpoints.api_server([HangmanApi])
