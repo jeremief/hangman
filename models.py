@@ -27,7 +27,6 @@ class Game(ndb.Model):
     @classmethod
     def create_new_game_models(cls, user, answer, strikes):
         """ This method creates a new game"""
-        # if strikes_left <= 0:
         if strikes <= 0:
             raise ValueError("You need a positive number of strikes")
 
@@ -38,7 +37,7 @@ class Game(ndb.Model):
             i += 1 
 
         game = Game(user=user,
-                    answer=answer,
+                    answer=answer.upper(),
                     strikes_left=int(strikes),
                     game_over=False,
                     game_won=False,
@@ -59,20 +58,22 @@ class Game(ndb.Model):
         form.message = message
         return form
 
+
 class StringMessage(messages.Message):
-    """StringMessage-- outbound (single) string message"""
+    """StringMessage-- used to return a single string message"""
     message = messages.StringField(1, required=True)
 
 
 class NewGameForm(messages.Message):
-    """docstring for NewGameForm"""
+    """ NewGameForm: used to capture the new game request. It will then be used 
+    to post in """
     user_name = messages.StringField(1, required=True)
     answer = messages.StringField(2, required=True)
     strikes = messages.StringField(3, default='5')
 
 
 class GameForm(messages.Message):
-    """GameForm for outbound game state information"""
+    """GameForm: used to return a response containing the game current state"""
     urlsafe_key = messages.StringField(1, required=True)
     strikes = messages.IntegerField(2, required=True)
     game_over = messages.BooleanField(3, required=True)
@@ -80,5 +81,11 @@ class GameForm(messages.Message):
     game_cancelled = messages.BooleanField(5, required=True)
     message = messages.StringField(6, required=True)
     user_name = messages.StringField(7, required=True)
+
+
+class PlayTurnForm(messages.Message):
+    """docstring for PlayTurnForm"""
+    guess = messages.StringField(1, required=True)
+        
         
         
