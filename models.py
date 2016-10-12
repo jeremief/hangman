@@ -69,7 +69,7 @@ class NewGameForm(messages.Message):
     to post in """
     user_name = messages.StringField(1, required=True)
     answer = messages.StringField(2, required=True)
-    strikes = messages.StringField(3, default='5')
+    strikes = messages.IntegerField(3, default=5)
 
 
 class GameForm(messages.Message):

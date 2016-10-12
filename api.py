@@ -78,33 +78,30 @@ class HangmanApi(remote.Service):
     #     if game.guess.isalnum() == False:
     #         msg = "Letters only please..."
     #         user_input_valid = 0
-    #     if len(user_input) != 1 and game.guess!= "CANCEL":
+    #     if len(user_input) != 1:
     #         msg = "Single character please..."
     #         user_input_valid = 0
 
     #     # Test user input against answer
     #     if user_input_valid == 1:
-    #         if game.guess!= "CANCEL":
-    #             if game.guess in answer:
-    #                 for i in answer:
-    #                     if game.guess== i:
-    #                         for j in range(0,len(current_game)):
-    #                             if answer[j] == i:
-    #                                 current_game[j]= user_input
-    #                 print "CORRECT"
-    #                 if current_game == answer:
-    #                     won = 1
-    #                     game_over = 1
-    #                     display_current_game(current_game)
-    #             else:
-    #                 print "WRONG"
-    #                 strikes_left -= 1
-    #                 print " "
-    #                 if strikes_left == 0 :
-    #                     game_over = 1
-    #                     won = 0
+    #         if game.guess in answer:
+    #             for i in answer:
+    #                 if game.guess== i:
+    #                     for j in range(0,len(current_game)):
+    #                         if answer[j] == i:
+    #                             current_game[j]= user_input
+    #             print "CORRECT"
+    #             if current_game == answer:
+    #                 won = 1
+    #                 game_over = 1
+    #                 display_current_game(current_game)
     #         else:
-    #             game_cancelled = 1
+    #             print "WRONG"
+    #             strikes_left -= 1
+    #             print " "
+    #             if strikes_left == 0 :
+    #                 game_over = 1
+    #                 won = 0
     #         game_over = 1
 
 
@@ -112,8 +109,7 @@ class HangmanApi(remote.Service):
     #         print "YOU WON"       
     #     if won == 0 and game_cancelled == 0:
     #         print "YOU LOST"
-    #     else:
-    #         print "GAME CANCELLED"
+
 
 
 
