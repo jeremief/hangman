@@ -13,13 +13,14 @@ from google.appengine.api import taskqueue
 
 from models import User, Game
 from models import StringMessage, NewGameForm, GameForm, PlayTurnForm
-from utils import get_by_urlsafe
+from utils import get_by_urlsafe, validate_input
 
 
 USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1),
                                            email=messages.StringField(2))
 NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
 PLAY_TURN_REQUEST = endpoints.ResourceContainer(PlayTurnForm)
+
 
 
 @endpoints.api(name='hangman', version='v1')
@@ -56,9 +57,13 @@ class HangmanApi(remote.Service):
         try:
             game = Game.create_new_game_models(user.key, request.answer, request.strikes)
         except ValueError:
-            raise endpoints.BadRequestException('You really really need a positive number of strikes')
+            raise endpoints.BadRequestException('You really need a positive number of strikes')
+        input_validation = validate_input(game.answer)
+        if input_validation[0] == True:
+            return game.to_form('Have fun playing Hangman!')
+        else:
+            raise endpoints.BadRequestException(input_validation[1])
         # The taskqueue job will go here
-        return game.to_form('Have fun playing Hangman!')
 
 
     # @endpoints.method(request_message=PlayTurnForm,

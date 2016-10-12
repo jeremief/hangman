@@ -39,3 +39,29 @@ def get_by_urlsafe(urlsafe, model):
         print "Value error - Incorrect kind"
         raise ValueError('Incorrect Kind')
     return entity
+
+
+def validate_input(user_input, char_number=0):
+    """ This function validates that user input is an alpha string
+    of the required length"""
+    user_input_valid = True
+    function_message = ""
+    user_input_list = list(user_input)
+    for i in user_input_list:
+        if i.isdigit() == True:
+            function_message = "No numbers please..."
+            user_input_valid = False
+    if user_input.isalnum() == False:
+        function_message += "No special characters please..."
+        user_input_valid = False
+    if char_number != 0:
+        if len(user_input) != char_number:
+            if char_number != 1:
+                function_message += "Only %i characters please..." % character
+            else:
+                function_message += "Only one character please..." % character
+            user_input_valid = False
+    if user_input_valid == True:
+        return [True]
+    else:
+        return [False, function_message]
