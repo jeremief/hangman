@@ -42,8 +42,9 @@ def get_by_urlsafe(urlsafe, model):
 
 
 def validate_input(user_input, char_number=0):
-    """ This function validates that user input is an alpha string
-    of the required length"""
+    """ This function validates that user input is an alpha only string
+    of the required length
+    """
     user_input_valid = True
     function_message = ""
     user_input_list = list(user_input)
@@ -59,7 +60,7 @@ def validate_input(user_input, char_number=0):
             if char_number != 1:
                 function_message += "Only %i characters please..." % character
             else:
-                function_message += "Only one character please..." % character
+                function_message += "Only one character please..."
             user_input_valid = False
     if user_input_valid == True:
         return [True]
