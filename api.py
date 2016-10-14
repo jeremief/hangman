@@ -7,7 +7,6 @@ primarily with communication to/from the API's users."""
 
 # TODO
 # case where you already played a correct letter
-# case where you are trying to play a finished game
 
 import logging
 import endpoints
@@ -78,9 +77,16 @@ class HangmanApi(remote.Service):
                       name='play_turn_api_name',
                       http_method='PUT')
     def play_turn_api(self, request):
+        
+
         """ Process user input"""
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         msg = ""
+
+        """ Validate game status"""
+        if game.game_over == True:
+            msg = "This game is already over!"
+            raise endpoints.BadRequestException(msg)
 
         # Validate user input
         input_validation = validate_input(request.guess, 1)
@@ -97,27 +103,27 @@ class HangmanApi(remote.Service):
                         for j in range(0,len(current_game_list)):
                             if answer_list[j] == i:
                                 current_game_list[j]= request.guess
-                msg += "Good guess!\n"
-                print "current_game_list: " + str(current_game_list)
+                msg += "Good guess! | "
+                # print "current_game_list: " + str(current_game_list)
                 game.current_game = ""
                 for k in range(0,len(current_game_list)):
                     game.current_game += str(current_game_list[k]) + " "
 
-                print "current_game_list: " + str(current_game_list)
+                # print "current_game_list: " + str(current_game_list)
                 if current_game_list == answer_list:
                     game.game_won = True
                     game.game_over = True
             else:
                 game.strikes_left -= 1
-                msg += "Wrong guess...\n"
+                msg += "Wrong guess... | "
                 if game.strikes_left == 0:
                     game.game_over = True
                     game.game_won = False
 
             game.put()
 
-            msg += game.current_game + "\n" 
-            msg += "Strike(s) left: " + str(game.strikes_left) + "\n"
+            msg += game.current_game + " | " 
+            msg += "Strike(s) left: " + str(game.strikes_left) + " | "
 
             if game.game_over == 1:
                 if game.game_won == 1:
