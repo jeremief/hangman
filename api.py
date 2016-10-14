@@ -5,9 +5,6 @@ move game logic to another file. Ideally the API will be simple, concerned
 primarily with communication to/from the API's users."""
 
 
-# TODO
-# case where you already played a correct letter
-
 import logging
 import endpoints
 from protorpc import remote, messages
@@ -77,9 +74,8 @@ class HangmanApi(remote.Service):
                       name='play_turn_api_name',
                       http_method='PUT')
     def play_turn_api(self, request):
-        
-
         """ Process user input"""
+
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         msg = ""
 
@@ -97,6 +93,9 @@ class HangmanApi(remote.Service):
             request.guess = request.guess.upper()
             answer_list = list(game.answer)
             current_game_list = list(game.current_game.replace(" ",""))
+            if request.guess in current_game_list:
+                msg = "You already played that letter"
+                raise endpoints.BadRequestException(msg)
             if request.guess in answer_list:
                 for i in answer_list:
                     if request.guess== i:
@@ -104,12 +103,10 @@ class HangmanApi(remote.Service):
                             if answer_list[j] == i:
                                 current_game_list[j]= request.guess
                 msg += "Good guess! | "
-                # print "current_game_list: " + str(current_game_list)
                 game.current_game = ""
                 for k in range(0,len(current_game_list)):
                     game.current_game += str(current_game_list[k]) + " "
 
-                # print "current_game_list: " + str(current_game_list)
                 if current_game_list == answer_list:
                     game.game_won = True
                     game.game_over = True
