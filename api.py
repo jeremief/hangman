@@ -5,6 +5,10 @@ move game logic to another file. Ideally the API will be simple, concerned
 primarily with communication to/from the API's users."""
 
 
+# TODO
+# case where you already played a correct letter
+# case where you are trying to play a finished game
+
 import logging
 import endpoints
 from protorpc import remote, messages
@@ -76,6 +80,7 @@ class HangmanApi(remote.Service):
     def play_turn_api(self, request):
         """ Process user input"""
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
+        msg = ""
 
         # Validate user input
         input_validation = validate_input(request.guess, 1)
@@ -83,32 +88,46 @@ class HangmanApi(remote.Service):
             raise endpoints.BadRequestException(input_validation[1])
         else:
         # Test user input against answer
-            if user_input_valid == 1:
-                if game.guess in answer:
-                    for i in answer:
-                        if game.guess== i:
-                            for j in range(0,len(current_game)):
-                                if answer[j] == i:
-                                    current_game[j]= user_input
-                    print "CORRECT"
-                    if current_game == answer:
-                        won = 1
-                        game_over = 1
-                        display_current_game(current_game)
-                else:
-                    print "WRONG"
-                    strikes_left -= 1
-                    print " "
-                    if strikes_left == 0 :
-                        game_over = 1
-                        won = 0
-                game_over = 1
+            request.guess = request.guess.upper()
+            answer_list = list(game.answer)
+            current_game_list = list(game.current_game.replace(" ",""))
+            if request.guess in answer_list:
+                for i in answer_list:
+                    if request.guess== i:
+                        for j in range(0,len(current_game_list)):
+                            if answer_list[j] == i:
+                                current_game_list[j]= request.guess
+                msg += "Good guess!\n"
+                print "current_game_list: " + str(current_game_list)
+                game.current_game = ""
+                for k in range(0,len(current_game_list)):
+                    game.current_game += str(current_game_list[k]) + " "
 
+                print "current_game_list: " + str(current_game_list)
+                if current_game_list == answer_list:
+                    game.game_won = True
+                    game.game_over = True
+            else:
+                game.strikes_left -= 1
+                msg += "Wrong guess...\n"
+                if game.strikes_left == 0:
+                    game.game_over = True
+                    game.game_won = False
 
-            if won == 1:
-                print "YOU WON"       
-            if won == 0 and game_cancelled == 0:
-                print "YOU LOST"
+            game.put()
+
+            msg += game.current_game + "\n" 
+            msg += "Strike(s) left: " + str(game.strikes_left) + "\n"
+
+            if game.game_over == 1:
+                if game.game_won == 1:
+                    msg += "YOU WON!"
+                if game.game_won == 0:
+                    msg += "YOU LOST!"
+            else:
+                msg += "Carry on!"
+        return game.to_form(msg)
+
 
 
 
