@@ -19,6 +19,7 @@ class Game(ndb.Model):
     user = ndb.KeyProperty(required=True, kind='User')
     answer = ndb.StringProperty(required=True)
     strikes_left = ndb.IntegerProperty (required=True)
+    mistakes_made = ndb.IntegerProperty(required=True)
     game_over = ndb.BooleanProperty(required=True)
     game_won = ndb.BooleanProperty(required=True)
     game_cancelled = ndb.BooleanProperty(required=True)
@@ -39,6 +40,7 @@ class Game(ndb.Model):
         game = Game(user=user,
                     answer=answer.upper(),
                     strikes_left=int(strikes),
+                    mistakes_made=0,
                     game_over=False,
                     game_won=False,
                     game_cancelled=False,
@@ -52,11 +54,16 @@ class Game(ndb.Model):
         form.urlsafe_key = self.key.urlsafe()
         form.user_name = self.user.get().name
         form.strikes = self.strikes_left
+        form.mistakes = self.mistakes_made
         form.game_over = self.game_over
         form.game_won = self.game_won
         form.game_cancelled = self.game_cancelled
         form.message = message
         return form
+
+class Score (ndb.Model):
+    """Score keeping structure"""
+
 
 
 class StringMessage(messages.Message):
@@ -76,11 +83,12 @@ class GameForm(messages.Message):
     """GameForm: used to return a response containing the game current state"""
     urlsafe_key = messages.StringField(1, required=True)
     strikes = messages.IntegerField(2, required=True)
-    game_over = messages.BooleanField(3, required=True)
-    game_won = messages.BooleanField(4, required=True)
-    game_cancelled = messages.BooleanField(5, required=True)
-    message = messages.StringField(6, required=True)
-    user_name = messages.StringField(7, required=True)
+    mistakes = messages.IntegerField(3, required=True)
+    game_over = messages.BooleanField(4, required=True)
+    game_won = messages.BooleanField(5, required=True)
+    game_cancelled = messages.BooleanField(6, required=True)
+    message = messages.StringField(7, required=True)
+    user_name = messages.StringField(8, required=True)
 
 
 class PlayTurnForm(messages.Message):

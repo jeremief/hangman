@@ -4,6 +4,9 @@ This can also contain game logic. For more complex games it would be wise to
 move game logic to another file. Ideally the API will be simple, concerned
 primarily with communication to/from the API's users."""
 
+# TODO
+# Add random game generation api
+
 
 import logging
 import endpoints
@@ -112,6 +115,7 @@ class HangmanApi(remote.Service):
                     game.game_over = True
             else:
                 game.strikes_left -= 1
+                game.mistakes_made += 1
                 msg += "Wrong guess... | "
                 if game.strikes_left == 0:
                     game.game_over = True
