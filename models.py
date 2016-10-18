@@ -61,9 +61,50 @@ class Game(ndb.Model):
         form.message = message
         return form
 
+
 class Score (ndb.Model):
     """Score keeping structure"""
+    user = ndb.KeyProperty(required=True, kind='User')
+    game = ndb.KeyProperty(required=True, kind='Game')
+    date = ndb.DateProperty(required=True, auto_now_add=True)
+    unique_letters = ndb.IntegerProperty(required=True)
+    mistakes_made = ndb.IntegerProperty(required=True, default=0)
+    game_over = ndb.BooleanProperty(required=True, default=False)
+    game_status = ndb.StringProperty(required=True, default='In progress')
+    final_score = ndb.IntegerProperty(required=True, default=0)
 
+    @classmethod
+    def create_new_score_models(cls, user, game):
+        
+        count_unique_letters = 0
+        unique_letters = ""
+        game_letters = list(game.answer)
+
+        for i in range(0, len(game_letters)):
+            if game_letters[i] not in unique_letters:
+                unique_letters += game_letters[i]
+        count_unique_letters = len(unique_letters)
+
+        score = Score(user=user.key,
+                      game=game.key,
+                      unique_letters=count_unique_letters,
+                      mistakes_made=0,
+                      game_over=False,
+                      game_status='In  progress',
+                      final_score=0)
+        score.put()
+
+    def to_form(self, message):
+        form = ScoreForm()
+        form.user_name = self.user.get().name
+        form.urlsafe_key = self.key.urlsafe()
+        form.date = str(self.date)
+        form.unique_letters = self.unique_letters
+        form.mistakes_made = self.mistakes_made
+        form.game_over = self.game_over
+        form.game_status = self.game_status
+        form.final_score = self.final_score
+        return form
 
 
 class StringMessage(messages.Message):
@@ -94,6 +135,20 @@ class GameForm(messages.Message):
 class PlayTurnForm(messages.Message):
     """docstring for PlayTurnForm"""
     guess = messages.StringField(1, required=True)
+
+
+class ScoreForm(messages.Message):
+    """ScoreForm: used to return a response containing a game's score"""
+    user_name = messages.StringField(1, required=True) 
+    urlsafe_key = messages.StringField(2, required=True)
+    date = messages.StringField(3, required=True)
+    unique_letters_answer = messages.IntegerField(4, required=True)
+    mistakes_made_game = messages.IntegerField(5, required=True)
+    game_over = messages.BooleanField(6, required=True)
+    game_status = messages.StringField(7, required=True)
+    final_score = messages.IntegerField(8, required=True)
+
+
         
         
         

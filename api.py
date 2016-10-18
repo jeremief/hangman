@@ -6,6 +6,7 @@ primarily with communication to/from the API's users."""
 
 # TODO
 # Add random game generation api
+# Refactor answer processing
 
 
 import logging
@@ -14,7 +15,7 @@ from protorpc import remote, messages
 from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 
-from models import User, Game
+from models import User, Game, Score
 from models import StringMessage, NewGameForm, GameForm, PlayTurnForm
 from utils import get_by_urlsafe, validate_input
 
@@ -61,6 +62,7 @@ class HangmanApi(remote.Service):
             raise endpoints.NotFoundException('There is no user with that name!')
         try:
             game = Game.create_new_game_models(user.key, request.answer, request.strikes)
+            score = Score.create_new_score_models(user, game)
         except ValueError:
             raise endpoints.BadRequestException('You really need a positive number of strikes')
         input_validation = validate_input(game.answer)
