@@ -11,6 +11,8 @@ primarily with communication to/from the API's users."""
 
 import logging
 import endpoints
+import math
+
 from protorpc import remote, messages
 from google.appengine.api import memcache
 from google.appengine.api import taskqueue
@@ -75,13 +77,14 @@ class HangmanApi(remote.Service):
 
     @endpoints.method(request_message=PLAY_TURN_REQUEST,
                       response_message=GameForm,
-                      path='game/{urlsafe_game_key}',
+                      path='game/{urlsafe_game_key}', # Hand populated
                       name='play_turn_api_name',
                       http_method='PUT')
     def play_turn_api(self, request):
         """ Process user input"""
 
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
+        score = Score.query(Score.game == game.key).get()
         msg = ""
 
         """ Validate game status"""
@@ -115,15 +118,22 @@ class HangmanApi(remote.Service):
                 if current_game_list == answer_list:
                     game.game_won = True
                     game.game_over = True
+                    score.game_over = True
             else:
                 game.strikes_left -= 1
                 game.mistakes_made += 1
+                score.mistakes_made += 1
                 msg += "Wrong guess... | "
                 if game.strikes_left == 0:
                     game.game_over = True
                     game.game_won = False
+                    score.game_over = True
+
+            if score.game_over == True:
+                score.final_score = int(math.expm1(score.unique_letters) * score.mistakes_made / score.unique_letters)
 
             game.put()
+            score.put()
 
             msg += game.current_game + " | " 
             msg += "Strike(s) left: " + str(game.strikes_left) + " | "
