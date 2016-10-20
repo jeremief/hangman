@@ -27,6 +27,7 @@ USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1),
 NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
 PLAY_TURN_REQUEST = endpoints.ResourceContainer(PlayTurnForm, 
                                                 urlsafe_game_key=messages.StringField(1))
+SIMPLE_USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1))
 
 
 
@@ -150,7 +151,7 @@ class HangmanApi(remote.Service):
         return game.to_form(msg)
 
 
-    @endpoints.method(request_message=USER_REQUEST,
+    @endpoints.method(request_message=SIMPLE_USER_REQUEST,
                       response_message=ScoreForms,
                       path='scores/user/{user_name}',
                       name='get_user_scores',

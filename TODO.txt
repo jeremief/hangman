@@ -1,6 +1,6 @@
 1- Design game - Done
 
-2- Design score keeping
+2- Design score keeping - Done
 
 3- Implement following extensions:
  * get_user_games (returns all the user's active games)
