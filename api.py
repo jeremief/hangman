@@ -18,7 +18,7 @@ from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 
 from models import User, Game, Score
-from models import StringMessage, NewGameForm, GameForm, PlayTurnForm
+from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms
 from utils import get_by_urlsafe, validate_input
 
 
@@ -148,6 +148,19 @@ class HangmanApi(remote.Service):
         return game.to_form(msg)
 
 
+    @endpoints.method(request_message=USER_REQUEST,
+                      response_message=ScoreForms,
+                      path='scores/user/{user_name}',
+                      name='get_user_scores',
+                      http_method='GET')
+    def get_user_scores(self, request):
+        """Returns all of a user's scores"""
+        user = User.query(User.name == request.user_name).get()
+        print str(user)
+        if not user:
+            raise endpoints.NotFoundException('A user with that name does not exist')
+        scores = Score.query(Score.user == user.key)
+        return ScoreForms(items=[score.to_form() for score in scores])
 
 
 

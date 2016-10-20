@@ -94,7 +94,7 @@ class Score (ndb.Model):
                       final_score=0)
         score.put()
 
-    def to_form(self, message):
+    def to_form(self):
         form = ScoreForm()
         form.user_name = self.user.get().name
         form.urlsafe_key = self.key.urlsafe()
@@ -142,11 +142,17 @@ class ScoreForm(messages.Message):
     user_name = messages.StringField(1, required=True) 
     urlsafe_key = messages.StringField(2, required=True)
     date = messages.StringField(3, required=True)
-    unique_letters_answer = messages.IntegerField(4, required=True)
-    mistakes_made_game = messages.IntegerField(5, required=True)
+    unique_letters = messages.IntegerField(4, required=True)
+    mistakes_made = messages.IntegerField(5, required=True)
     game_over = messages.BooleanField(6, required=True)
     game_status = messages.StringField(7, required=True)
     final_score = messages.IntegerField(8, required=True)
+
+
+class ScoreForms(messages.Message):
+    """Returns multiple ScoreForms"""
+    items = messages.MessageField(ScoreForm, 1, repeated=True)
+        
 
 
         
