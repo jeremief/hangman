@@ -130,7 +130,7 @@ class HangmanApi(remote.Service):
                     score.game_over = True
 
             if score.game_over == True:
-                score.final_score = int(math.expm1(score.unique_letters) * score.mistakes_made / score.unique_letters)
+                score.final_score = int((math.pow(score.unique_letters, score.unique_letters) * (1-(score.mistakes_made / score.unique_letters))))
 
             game.put()
             score.put()
