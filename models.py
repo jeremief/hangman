@@ -48,7 +48,7 @@ class Game(ndb.Model):
         game.put()
         return game
 
-    def to_form(self, message):
+    def to_form(self, message=""):
         """ Returns a GameForm representation of the game """
         form = GameForm()
         form.urlsafe_key = self.key.urlsafe()
@@ -152,6 +152,12 @@ class ScoreForm(messages.Message):
 class ScoreForms(messages.Message):
     """Returns multiple ScoreForms"""
     items = messages.MessageField(ScoreForm, 1, repeated=True)
+
+
+class GameForms(messages.Message):
+    """Returns multiple GameForms"""
+    items = messages.MessageField(GameForm, 1, repeated=True)
+        
         
 
 

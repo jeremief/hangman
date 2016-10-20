@@ -3,7 +3,7 @@
 2- Design score keeping - Done
 
 3- Implement following extensions:
- * get_user_games (returns all the user's active games)
+ * get_user_games (returns all the user's active games) - Done
  * cancel_game
  * get_high_scores
  * get_user_rankings
