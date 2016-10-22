@@ -29,7 +29,6 @@ PLAY_TURN_REQUEST = endpoints.ResourceContainer(PlayTurnForm,
                                                 urlsafe_game_key=messages.StringField(1))
 SIMPLE_USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1))
 SIMPLE_GAME_REQUEST = endpoints.ResourceContainer(urlsafe_game_key=messages.StringField(1))
-# HIGH_SCORE_REQUEST = endpoints.ResourceContainer(number_of_results=messages.IntegerField(1, default=0))
 HIGH_SCORE_REQUEST = endpoints.ResourceContainer(number_of_results=messages.StringField(1, default='0'))
 
 
@@ -89,6 +88,8 @@ class HangmanApi(remote.Service):
 
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         score = Score.query(Score.game == game.key).get()
+        user = User.query(game.user == User.key).get()
+        # print "user: " + str(user.email)
         msg = ""
 
         """ Validate game status"""
@@ -137,9 +138,11 @@ class HangmanApi(remote.Service):
 
             if score.game_over == True and game.game_won == True:
                 score.final_score = int((math.pow(score.unique_letters, score.unique_letters) * (1-(score.mistakes_made / score.unique_letters))))
+                user.total_score += score.final_score
 
             game.put()
             score.put()
+            user.put()
 
             msg += game.current_game + " | " 
             msg += "Strike(s) left: " + str(game.strikes_left) + " | "
@@ -227,6 +230,7 @@ class HangmanApi(remote.Service):
                       name='get_high_scores',
                       http_method='GET')
     def get_high_scores(self, request):
+        """Returns a list of scores sorted by final_score in descending order"""
         try:
             count_of_results = int(request.number_of_results)
             if count_of_results == 0:
