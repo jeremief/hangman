@@ -29,6 +29,8 @@ PLAY_TURN_REQUEST = endpoints.ResourceContainer(PlayTurnForm,
                                                 urlsafe_game_key=messages.StringField(1))
 SIMPLE_USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1))
 SIMPLE_GAME_REQUEST = endpoints.ResourceContainer(urlsafe_game_key=messages.StringField(1))
+# HIGH_SCORE_REQUEST = endpoints.ResourceContainer(number_of_results=messages.IntegerField(1, default=0))
+HIGH_SCORE_REQUEST = endpoints.ResourceContainer(number_of_results=messages.StringField(1, default='0'))
 
 
 
@@ -217,6 +219,24 @@ class HangmanApi(remote.Service):
         score.put()
 
         return StringMessage(message='Game {} cancelled!'.format(request.urlsafe_game_key))
+
+
+    @endpoints.method(request_message=HIGH_SCORE_REQUEST,
+                      response_message=ScoreForms,
+                      path='high_scores',
+                      name='get_high_scores',
+                      http_method='GET')
+    def get_high_scores(self, request):
+        try:
+            count_of_results = int(request.number_of_results)
+            if count_of_results == 0:
+                scores = Score.query(Score.game_status == 'Won').order(-Score.final_score)
+            else:
+                scores = Score.query(Score.game_status == 'Won').order(-Score.final_score).fetch(limit=count_of_results)
+            return ScoreForms(items=[score.to_form() for score in scores])
+        except:
+            raise endpoints.BadRequestException('Numbers only please...')
+
 
 
 api = endpoints.api_server([HangmanApi])
