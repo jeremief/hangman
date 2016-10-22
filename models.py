@@ -11,7 +11,8 @@ from google.appengine.ext import ndb
 class User(ndb.Model):
     """User profile"""
     name = ndb.StringProperty(required=True)
-    email =ndb.StringProperty(required=True)
+    email = ndb.StringProperty(required=True)
+    total_score = ndb.IntegerProperty(default=0)
 
 
 class Game(ndb.Model):
