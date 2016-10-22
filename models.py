@@ -14,6 +14,13 @@ class User(ndb.Model):
     email = ndb.StringProperty(required=True)
     total_score = ndb.IntegerProperty(default=0)
 
+    def to_form(self):
+        """Returns a UserForm representation of a user"""
+        form = UserForm()
+        form.user_name = self.name
+        form.total_score = self.total_score
+        return form
+
 
 class Game(ndb.Model):
     """Game structure"""
@@ -158,6 +165,20 @@ class ScoreForms(messages.Message):
 class GameForms(messages.Message):
     """Returns multiple GameForms"""
     items = messages.MessageField(GameForm, 1, repeated=True)
+        
+
+class UserForm(messages.Message):
+    """docstring for UserForm"""
+    user_name = messages.StringField(1, required=True)
+    total_score = messages.IntegerField(2, required=True)
+
+
+class UserForms(messages.Message):
+    """docstring for UserForms"""
+    items = messages.MessageField(UserForm, 1, repeated=True)
+        
+    
+        
         
         
 

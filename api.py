@@ -18,7 +18,7 @@ from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 
 from models import User, Game, Score
-from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms, GameForms
+from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms, GameForms, UserForm, UserForms
 from utils import get_by_urlsafe, validate_input
 
 
@@ -241,6 +241,15 @@ class HangmanApi(remote.Service):
         except:
             raise endpoints.BadRequestException('Numbers only please...')
 
+
+    @endpoints.method(response_message=UserForms,
+                      path='rankings',
+                      name='get_user_rankings',
+                      http_method='GET')
+    def get_user_rankings(self, request):
+        """Returns all users sorted by ranking"""
+        users = User.query().order(-User.total_score)
+        return UserForms(items=[user.to_form() for user in users])
 
 
 api = endpoints.api_server([HangmanApi])
