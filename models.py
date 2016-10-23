@@ -32,6 +32,7 @@ class Game(ndb.Model):
     game_won = ndb.BooleanProperty(required=True)
     game_cancelled = ndb.BooleanProperty(required=True)
     current_game = ndb.StringProperty(required=True)
+    game_history = ndb.StringProperty(repeated=True)
 
     @classmethod
     def create_new_game_models(cls, user, answer, strikes):
@@ -74,7 +75,7 @@ class Score (ndb.Model):
     """Score keeping structure"""
     user = ndb.KeyProperty(required=True, kind='User')
     game = ndb.KeyProperty(required=True, kind='Game')
-    date = ndb.DateProperty(required=True, auto_now_add=True)
+    # date = ndb.DateProperty(required=True, auto_now_add=True)
     unique_letters = ndb.IntegerProperty(required=True)
     mistakes_made = ndb.IntegerProperty(required=True, default=0)
     game_over = ndb.BooleanProperty(required=True, default=False)
@@ -106,7 +107,7 @@ class Score (ndb.Model):
         form = ScoreForm()
         form.user_name = self.user.get().name
         form.urlsafe_key = self.key.urlsafe()
-        form.date = str(self.date)
+        # form.date = str(self.date)
         form.unique_letters = self.unique_letters
         form.mistakes_made = self.mistakes_made
         form.game_over = self.game_over
@@ -149,12 +150,12 @@ class ScoreForm(messages.Message):
     """ScoreForm: used to return a response containing a game's score"""
     user_name = messages.StringField(1, required=True) 
     urlsafe_key = messages.StringField(2, required=True)
-    date = messages.StringField(3, required=True)
-    unique_letters = messages.IntegerField(4, required=True)
-    mistakes_made = messages.IntegerField(5, required=True)
-    game_over = messages.BooleanField(6, required=True)
-    game_status = messages.StringField(7, required=True)
-    final_score = messages.IntegerField(8, required=True)
+    # date = messages.StringField(3, required=True)
+    unique_letters = messages.IntegerField(3, required=True)
+    mistakes_made = messages.IntegerField(4, required=True)
+    game_over = messages.BooleanField(5, required=True)
+    game_status = messages.StringField(6, required=True)
+    final_score = messages.IntegerField(7, required=True)
 
 
 class ScoreForms(messages.Message):

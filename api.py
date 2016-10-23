@@ -58,7 +58,7 @@ class HangmanApi(remote.Service):
     @endpoints.method(request_message=NEW_GAME_REQUEST,
                       response_message=GameForm,
                       path='game',
-                      name='create_new_game_api_name',
+                      name='create_new_game',
                       http_method='POST')
     def create_new_game_api(self, request):
         """ Create a new game. Requires an exiting user"""
@@ -81,7 +81,7 @@ class HangmanApi(remote.Service):
     @endpoints.method(request_message=PLAY_TURN_REQUEST,
                       response_message=GameForm,
                       path='game/{urlsafe_game_key}', # Hand populated
-                      name='play_turn_api_name',
+                      name='play_turn',
                       http_method='PUT')
     def play_turn_api(self, request):
         """ Process user input"""
