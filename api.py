@@ -17,7 +17,7 @@ from protorpc import remote, messages
 from google.appengine.api import memcache
 from google.appengine.api import taskqueue
 
-from models import User, Game, Score
+from models import User, HistoryRecord, Game, Score
 from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms, GameForms, UserForm, UserForms
 from utils import get_by_urlsafe, validate_input
 
@@ -66,7 +66,16 @@ class HangmanApi(remote.Service):
         if not user:
             raise endpoints.NotFoundException('There is no user with that name!')
         try:
-            game = Game.create_new_game_models(user.key, request.answer, request.strikes)
+            # game = Game.create_new_game_models(user.key, request.answer, request.strikes)
+            history_record = [HistoryRecord(play_sequence=1,
+                                           action='Game created',
+                                           user_entry = "",
+                                           result="",
+                                           current_game="",
+                                           game_over=False,
+                                           game_won=False,
+                                           game_cancelled=False)]
+            game = Game.create_new_game_models(user.key, request.answer, request.strikes, history_record)
             score = Score.create_new_score_models(user, game)
         except ValueError:
             raise endpoints.BadRequestException('You really need a positive number of strikes')

@@ -49,7 +49,7 @@ class Game(ndb.Model):
     game_history = ndb.StructuredProperty(HistoryRecord, repeated=True)
 
     @classmethod
-    def create_new_game_models(cls, user, answer, strikes):
+    def create_new_game_models(cls, user, answer, strikes, history_record):
         """ This method creates a new game"""
         if strikes <= 0:
             raise ValueError("You need a positive number of strikes")
@@ -67,7 +67,9 @@ class Game(ndb.Model):
                     game_over=False,
                     game_won=False,
                     game_cancelled=False,
-                    current_game=current_game)
+                    current_game=current_game,
+                    game_history=history_record)
+        game.game_history[0].current_game = game.current_game
         game.put()
         return game
 
