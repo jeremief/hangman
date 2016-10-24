@@ -22,6 +22,19 @@ class User(ndb.Model):
         return form
 
 
+class HistoryRecord(ndb.Model):
+    """docstring for HistoryRecord"""
+    play_sequence = ndb.IntegerProperty(required=True)
+    action = ndb.StringProperty(required=True)
+    user_entry = ndb.StringProperty(required=True)
+    result = ndb.StringProperty(required=True)
+    date = ndb.DateTimeProperty(required=True, auto_now_add=True)
+    current_game = ndb.StringProperty(required=True)
+    game_over = ndb.BooleanProperty(required=True)
+    game_won = ndb.BooleanProperty(required=True)
+    game_cancelled = ndb.BooleanProperty(required=True)  
+
+
 class Game(ndb.Model):
     """Game structure"""
     user = ndb.KeyProperty(required=True, kind='User')
@@ -32,7 +45,8 @@ class Game(ndb.Model):
     game_won = ndb.BooleanProperty(required=True)
     game_cancelled = ndb.BooleanProperty(required=True)
     current_game = ndb.StringProperty(required=True)
-    game_history = ndb.StringProperty(repeated=True)
+    game_sequence = ndb.IntegerProperty(required=True, default=1)
+    game_history = ndb.StructuredProperty(HistoryRecord, repeated=True)
 
     @classmethod
     def create_new_game_models(cls, user, answer, strikes):
@@ -75,7 +89,6 @@ class Score (ndb.Model):
     """Score keeping structure"""
     user = ndb.KeyProperty(required=True, kind='User')
     game = ndb.KeyProperty(required=True, kind='Game')
-    # date = ndb.DateProperty(required=True, auto_now_add=True)
     unique_letters = ndb.IntegerProperty(required=True)
     mistakes_made = ndb.IntegerProperty(required=True, default=0)
     game_over = ndb.BooleanProperty(required=True, default=False)
@@ -107,7 +120,6 @@ class Score (ndb.Model):
         form = ScoreForm()
         form.user_name = self.user.get().name
         form.urlsafe_key = self.key.urlsafe()
-        # form.date = str(self.date)
         form.unique_letters = self.unique_letters
         form.mistakes_made = self.mistakes_made
         form.game_over = self.game_over

@@ -140,6 +140,8 @@ class HangmanApi(remote.Service):
                 score.final_score = int((math.pow(score.unique_letters, score.unique_letters) * (1-(score.mistakes_made / score.unique_letters))))
                 user.total_score += score.final_score
 
+            game.game_sequence += 1
+
             game.put()
             score.put()
             user.put()
@@ -214,6 +216,7 @@ class HangmanApi(remote.Service):
         game.game_cancelled = True
         game.game_over = True
         game.game_won = False
+        game.game_sequence += 1
         game.put()
 
         score.game_over = True
@@ -234,9 +237,10 @@ class HangmanApi(remote.Service):
         try:
             count_of_results = int(request.number_of_results)
             if count_of_results == 0:
-                scores = Score.query(Score.game_status == 'Won').order(-Score.final_score)
+                scores = Score.query(Score.game_status == 'Won').order(-Score.final_score).fetch()
             else:
                 scores = Score.query(Score.game_status == 'Won').order(-Score.final_score).fetch(limit=count_of_results)
+            print scores
             return ScoreForms(items=[score.to_form() for score in scores])
         except:
             raise endpoints.BadRequestException('Numbers only please...')
