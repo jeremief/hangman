@@ -125,6 +125,7 @@ class HangmanApi(remote.Service):
                             if answer_list[j] == i:
                                 current_game_list[j]= request.guess
                 msg += "Good guess! | "
+                result = "Good guess"
                 game.current_game = ""
                 for k in range(0,len(current_game_list)):
                     game.current_game += str(current_game_list[k]) + " "
@@ -139,6 +140,7 @@ class HangmanApi(remote.Service):
                 game.mistakes_made += 1
                 score.mistakes_made += 1
                 msg += "Wrong guess... | "
+                result = "Wrong guess"
                 if game.strikes_left == 0:
                     game.game_over = True
                     game.game_won = False
@@ -151,6 +153,16 @@ class HangmanApi(remote.Service):
 
             game.game_sequence += 1
 
+            history_record = [HistoryRecord(play_sequence=game.game_sequence,
+                                            action="Player played",
+                                            user_entry=request.guess,
+                                            result=result,
+                                            current_game=game.current_game,
+                                            game_over=game.game_over,
+                                            game_won=game.game_won,
+                                            game_cancelled=game.game_cancelled)]
+
+            game.game_history += history_record
             game.put()
             score.put()
             user.put()
