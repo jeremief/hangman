@@ -22,8 +22,8 @@ from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm
 from utils import get_by_urlsafe, validate_input
 
 
-USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1),
-                                           email=messages.StringField(2))
+USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1, required=True),
+                                           email=messages.StringField(2, required=True))
 NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
 PLAY_TURN_REQUEST = endpoints.ResourceContainer(PlayTurnForm, 
                                                 urlsafe_game_key=messages.StringField(1))
