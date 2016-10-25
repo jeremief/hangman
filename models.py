@@ -86,6 +86,20 @@ class Game(ndb.Model):
         form.message = message
         return form
 
+    def to_history_form(self, i):
+        """ Returns a history form"""
+        form = HistoryForm()
+        form.sequence = self.game_history[i].play_sequence
+        form.action = self.game_history[i].action
+        form.result = self.game_history[i].result
+        form.user_entry = self.game_history[i].user_entry
+        form.current_game = self.game_history[i].current_game
+        form.game_over = self.game_history[i].game_over
+        form.game_won = self.game_history[i].game_won
+        form.game_cancelled = self.game_history[i].game_cancelled
+        return form
+
+
 
 class Score (ndb.Model):
     """Score keeping structure"""
@@ -164,7 +178,6 @@ class ScoreForm(messages.Message):
     """ScoreForm: used to return a response containing a game's score"""
     user_name = messages.StringField(1, required=True) 
     urlsafe_key = messages.StringField(2, required=True)
-    # date = messages.StringField(3, required=True)
     unique_letters = messages.IntegerField(3, required=True)
     mistakes_made = messages.IntegerField(4, required=True)
     game_over = messages.BooleanField(5, required=True)
@@ -189,11 +202,27 @@ class UserForm(messages.Message):
 
 
 class UserForms(messages.Message):
-    """docstring for UserForms"""
+    """Returns multiple UserForms"""
     items = messages.MessageField(UserForm, 1, repeated=True)
         
-    
+
+class HistoryForm(messages.Message):
+    """HistoryForm"""
+    sequence = messages.IntegerField(1, required=True)
+    action = messages.StringField(2, required=True)
+    user_entry = messages.StringField(3, required=True)
+    result = messages.StringField(4, required=True)
+    current_game = messages.StringField(5, required=True)
+    game_over = messages.BooleanField(6, required=True)
+    game_won = messages.BooleanField(7, required=True)
+    game_cancelled = messages.BooleanField(8, required=True)
+
+
+class HistoryForms(messages.Message):
+    """Returns multiple HistoryForms"""
+    items = messages.MessageField(HistoryForm, 1, repeated=True)
         
+                                  
         
         
 
