@@ -237,6 +237,18 @@ class HangmanApi(remote.Service):
         game.game_over = True
         game.game_won = False
         game.game_sequence += 1
+
+        history_record = [HistoryRecord(play_sequence=game.game_sequence,
+                                        action="Game cancelled",
+                                        user_entry="",
+                                        result="",
+                                        current_game=game.current_game,
+                                        game_over=game.game_over,
+                                        game_won=game.game_won,
+                                        game_cancelled=game.game_cancelled)]
+
+        game.game_history += history_record
+
         game.put()
 
         score.game_over = True
