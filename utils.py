@@ -3,9 +3,9 @@
 import logging
 from google.appengine.ext import ndb
 import endpoints
-import math
+# import math
 
-from models import User, HistoryRecord, Game, Score
+# from models import User, HistoryRecord, Game, Score
 
 
 def get_by_urlsafe(urlsafe, model):

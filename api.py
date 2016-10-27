@@ -20,7 +20,7 @@ from google.appengine.api import taskqueue
 from models import User, HistoryRecord, Game, Score
 from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms, GameForms, UserForm, UserForms, HistoryForm, HistoryForms
 from utils import get_by_urlsafe, validate_input
-from game_logic import rate_game
+from game_logic import rate_game, validate_guess
 
 
 USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1, required=True),
@@ -98,6 +98,7 @@ class HangmanApi(remote.Service):
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         score = Score.query(Score.game == game.key).get()
         user = User.query(game.user == User.key).get()
+        user_guess = request.guess.upper()
         msg = ""
 
         """ Validate game status"""
@@ -111,12 +112,17 @@ class HangmanApi(remote.Service):
             raise endpoints.BadRequestException(input_validation[1])
         else:
         # Test user input against answer
-            request.guess = request.guess.upper()
+            # request.guess = request.guess.upper()
+            # current_game_list = list(game.current_game.replace(" ",""))
+            # if user_guess in current_game_list:
+            #     msg = "You already played that letter"
+            #     raise endpoints.BadRequestException(msg)
+
+            test = validate_guess(game, user_guess)
+
+            print test
             answer_list = list(game.answer)
-            current_game_list = list(game.current_game.replace(" ",""))
-            if request.guess in current_game_list:
-                msg = "You already played that letter"
-                raise endpoints.BadRequestException(msg)
+
             if request.guess in answer_list:
                 for i in answer_list:
                     if request.guess== i:
