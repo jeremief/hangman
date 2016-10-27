@@ -113,22 +113,22 @@ class HangmanApi(remote.Service):
         else:
         # Test user input against answer
             # request.guess = request.guess.upper()
-            # current_game_list = list(game.current_game.replace(" ",""))
             # if user_guess in current_game_list:
             #     msg = "You already played that letter"
             #     raise endpoints.BadRequestException(msg)
 
-            test = validate_guess(game, user_guess)
+            answer_valid = validate_guess(game, user_guess)
 
-            print test
+            current_game_list = list(game.current_game.replace(" ",""))
             answer_list = list(game.answer)
 
-            if request.guess in answer_list:
+            # if request.guess in answer_list:
+            if answer_valid == True:
                 for i in answer_list:
-                    if request.guess== i:
+                    if user_guess == i:
                         for j in range(0,len(current_game_list)):
                             if answer_list[j] == i:
-                                current_game_list[j]= request.guess
+                                current_game_list[j]= user_guess
                 msg += "Good guess! | "
                 result = "Good guess"
                 game.current_game = ""

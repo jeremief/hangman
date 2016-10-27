@@ -15,7 +15,7 @@ def rate_game(score):
 
 def validate_guess(game, user_guess):
     """ Returns a boolean value as to whether the user guess is correct 
-    or not"""
+    or not or throws an exception if the letter has already been played"""
     answer_list = list(game.answer)
     current_game_list = list(game.current_game.replace(" ",""))
 
