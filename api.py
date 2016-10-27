@@ -19,7 +19,8 @@ from google.appengine.api import taskqueue
 
 from models import User, HistoryRecord, Game, Score
 from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms, GameForms, UserForm, UserForms, HistoryForm, HistoryForms
-from utils import get_by_urlsafe, validate_input, rate_game
+from utils import get_by_urlsafe, validate_input
+from game_logic import rate_game
 
 
 USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1, required=True),
@@ -146,7 +147,6 @@ class HangmanApi(remote.Service):
                     score.game_status= "Lost"
 
             if score.game_over == True and game.game_won == True:
-                # score.final_score = int((math.pow(score.unique_letters, score.unique_letters) * (1-(score.mistakes_made / score.unique_letters))))
                 score.final_score = rate_game(score)
                 user.total_score += score.final_score
 
