@@ -3,6 +3,10 @@
 import logging
 from google.appengine.ext import ndb
 import endpoints
+import math
+
+from models import User, HistoryRecord, Game, Score
+
 
 def get_by_urlsafe(urlsafe, model):
     """Returns an ndb.Model entity that the urlsafe key points to. Checks
@@ -66,3 +70,24 @@ def validate_input(user_input, char_number=0):
         return [True]
     else:
         return [False, function_message]
+
+
+def handle_right_input():
+    """This fuction handles a correct input"""
+
+
+def handle_wrong_input():
+    """ This function handles an incorrect input"""
+
+def rate_game(score):
+    """This function rates the game after a win"""
+    final_score = int((math.pow(score.unique_letters, score.unique_letters) * 
+                  (1-(score.mistakes_made / score.unique_letters))))
+    return final_score
+
+
+
+def close_game():
+    """This function terminates a game after a win or a lose."""
+
+
