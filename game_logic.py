@@ -27,3 +27,104 @@ def validate_guess(game, user_guess):
         return True
     else:
         return False
+
+
+def handle_right_answer(user, game, score, user_guess):
+    """ Handles a correct user entry"""
+
+    current_game_list = list(game.current_game.replace(" ",""))
+    answer_list = list(game.answer)
+
+    for i in answer_list:
+        if user_guess == i:
+            for j in range(0,len(current_game_list)):
+                if answer_list[j] == i:
+                    current_game_list[j]= user_guess
+    # msg += "Good guess! | "
+    msg = "Good guess! | "
+    result = "Good guess" # will be passed into the history record
+    game.current_game = ""
+    for k in range(0,len(current_game_list)):
+        game.current_game += str(current_game_list[k]) + " "
+
+    if current_game_list == answer_list:
+        end_game(user, game, score, True, msg, user_guess)
+    else:
+        update_values(user, game, score, result, msg, user_guess)
+
+    return (game, msg)
+
+
+
+    return "Temporary return value"
+
+def handle_wrong_answer(user, game, score, user_guess):
+    """ Handles an incorrect user entry"""
+    game.strikes_left -= 1
+    game.mistakes_made += 1
+    score.mistakes_made += 1
+    # msg += "Wrong guess... | "
+    msg = "Wrong guess... | "
+    result = "Wrong guess" # will be passed into the history record
+    if game.strikes_left == 0:
+        end_game(user, game, score, False, msg)
+    else:
+        # update_values(user, game, score, result)
+        update_values(user, game, score, result, msg, user_guess)
+
+    return (game, msg)
+
+
+def end_game(user, game, score, game_won, message, user_guess):
+    """ Method finalises the gane and updates the various entities"""
+    msg = message
+    if game_won == True:
+        game.game_won = True
+        game.game_over = True
+        score.game_over = True
+        score.game_status = "Won"
+        score.final_score = rate_game(score)
+        user.total_score += score.final_score
+    else:
+        game.game_over = True
+        game.game_won = False
+        score.game_over = True
+
+    # update_values(user, game, score)
+    update_values(user, game, score, "", msg, user_guess)
+
+
+def update_values(user, game, score, result, message, user_guess):
+    """ Updates all entities at the end of a turn and returns the game in
+    its current state as well as the endpoint message"""
+    msg = message
+    game.game_sequence += 1
+
+    history_record = [HistoryRecord(play_sequence=game.game_sequence,
+                                    action="Player played",
+                                    user_entry=user_guess,
+                                    result=result,
+                                    current_game=game.current_game,
+                                    game_over=game.game_over,
+                                    game_won=game.game_won,
+                                    game_cancelled=game.game_cancelled)]
+
+    game.game_history += history_record
+    game.put()
+    score.put()
+    user.put()
+
+    msg += game.current_game + " | " 
+    msg += "Strike(s) left: " + str(game.strikes_left) + " | "
+
+    if game.game_over == 1:
+        if game.game_won == 1:
+            msg += "YOU WON!"
+        if game.game_won == 0:
+            msg += "YOU LOST!"
+    else:
+        msg += "Carry on!"
+
+    return (game, msg)
+            
+

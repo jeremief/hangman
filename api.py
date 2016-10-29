@@ -20,7 +20,7 @@ from google.appengine.api import taskqueue
 from models import User, HistoryRecord, Game, Score
 from models import StringMessage, NewGameForm, GameForm, PlayTurnForm, ScoreForm, ScoreForms, GameForms, UserForm, UserForms, HistoryForm, HistoryForms
 from utils import get_by_urlsafe, validate_input
-from game_logic import rate_game, validate_guess
+from game_logic import rate_game, validate_guess, handle_right_answer, handle_wrong_answer
 
 
 USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1, required=True),
@@ -99,7 +99,7 @@ class HangmanApi(remote.Service):
         score = Score.query(Score.game == game.key).get()
         user = User.query(game.user == User.key).get()
         user_guess = request.guess.upper()
-        msg = ""
+        # msg = ""
 
         """ Validate game status"""
         if game.game_over == True:
@@ -124,65 +124,68 @@ class HangmanApi(remote.Service):
 
             # if request.guess in answer_list:
             if answer_valid == True:
-                for i in answer_list:
-                    if user_guess == i:
-                        for j in range(0,len(current_game_list)):
-                            if answer_list[j] == i:
-                                current_game_list[j]= user_guess
-                msg += "Good guess! | "
-                result = "Good guess"
-                game.current_game = ""
-                for k in range(0,len(current_game_list)):
-                    game.current_game += str(current_game_list[k]) + " "
+                game_state = handle_right_answer(user, game, score, user_guess)
+                # for i in answer_list:
+                #     if user_guess == i:
+                #         for j in range(0,len(current_game_list)):
+                #             if answer_list[j] == i:
+                #                 current_game_list[j]= user_guess
+                # msg += "Good guess! | "
+                # result = "Good guess"
+                # game.current_game = ""
+                # for k in range(0,len(current_game_list)):
+                #     game.current_game += str(current_game_list[k]) + " "
 
-                if current_game_list == answer_list:
-                    game.game_won = True
-                    game.game_over = True
-                    score.game_over = True
-                    score.game_status = "Won"
+                # if current_game_list == answer_list:
+                #     game.game_won = True
+                #     game.game_over = True
+                #     score.game_over = True
+                #     score.game_status = "Won"
             else:
-                game.strikes_left -= 1
-                game.mistakes_made += 1
-                score.mistakes_made += 1
-                msg += "Wrong guess... | "
-                result = "Wrong guess"
-                if game.strikes_left == 0:
-                    game.game_over = True
-                    game.game_won = False
-                    score.game_over = True
-                    score.game_status= "Lost"
+                game_state = handle_wrong_answer(user, game, score, user_guess)
+                # game.strikes_left -= 1
+                # game.mistakes_made += 1
+                # score.mistakes_made += 1
+                # msg += "Wrong guess... | "
+                # result = "Wrong guess"
+                # if game.strikes_left == 0:
+                #     game.game_over = True
+                #     game.game_won = False
+                #     score.game_over = True
+                #     score.game_status= "Lost"
 
-            if score.game_over == True and game.game_won == True:
-                score.final_score = rate_game(score)
-                user.total_score += score.final_score
+            # if score.game_over == True and game.game_won == True:
+            #     score.final_score = rate_game(score)
+            #     user.total_score += score.final_score
 
-            game.game_sequence += 1
+            # game.game_sequence += 1
 
-            history_record = [HistoryRecord(play_sequence=game.game_sequence,
-                                            action="Player played",
-                                            user_entry=request.guess,
-                                            result=result,
-                                            current_game=game.current_game,
-                                            game_over=game.game_over,
-                                            game_won=game.game_won,
-                                            game_cancelled=game.game_cancelled)]
+            # history_record = [HistoryRecord(play_sequence=game.game_sequence,
+            #                                 action="Player played",
+            #                                 user_entry=request.guess,
+            #                                 result=result,
+            #                                 current_game=game.current_game,
+            #                                 game_over=game.game_over,
+            #                                 game_won=game.game_won,
+            #                                 game_cancelled=game.game_cancelled)]
 
-            game.game_history += history_record
-            game.put()
-            score.put()
-            user.put()
+            # game.game_history += history_record
+            # game.put()
+            # score.put()
+            # user.put()
 
-            msg += game.current_game + " | " 
-            msg += "Strike(s) left: " + str(game.strikes_left) + " | "
+            # msg += game.current_game + " | " 
+            # msg += "Strike(s) left: " + str(game.strikes_left) + " | "
 
-            if game.game_over == 1:
-                if game.game_won == 1:
-                    msg += "YOU WON!"
-                if game.game_won == 0:
-                    msg += "YOU LOST!"
-            else:
-                msg += "Carry on!"
-        return game.to_form(msg)
+            # if game.game_over == 1:
+            #     if game.game_won == 1:
+            #         msg += "YOU WON!"
+            #     if game.game_won == 0:
+            #         msg += "YOU LOST!"
+            # else:
+            #     msg += "Carry on!"
+        # return game.to_form(msg)
+        return game_state[0].to_form(game_state[1])
 
 
     @endpoints.method(request_message=SIMPLE_USER_REQUEST,
