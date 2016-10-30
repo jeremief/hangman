@@ -107,12 +107,11 @@ class HangmanApi(remote.Service):
 
         # Validate user input
         input_validation = validate_input(request.guess, 1)
+        
         if input_validation[0] == False:
             raise endpoints.BadRequestException(input_validation[1])
         else:
-
             answer_valid = validate_guess(game, user_guess)
-
             current_game_list = list(game.current_game.replace(" ",""))
             answer_list = list(game.answer)
 
