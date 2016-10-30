@@ -45,7 +45,6 @@ def handle_right_answer(user, game, score, user_guess):
         game.current_game += str(current_game_list[k]) + " "
 
     if current_game_list == answer_list:
-        # game_state = end_game(user, game, score, True, user_guess)
         game_state = end_game(user, game, score, True)
         user = game_state.get('user')
         game = game_state.get('game')
@@ -65,7 +64,6 @@ def handle_wrong_answer(user, game, score, user_guess):
     user_guess = user_guess
     result = "Wrong guess" # will be passed into the history record
     if game.strikes_left == 0:
-        # game_state = end_game(user, game, score, False, user_guess)
         game_state = end_game(user, game, score, False)
         user = game_state.get('user')
         game = game_state.get('game')
@@ -97,7 +95,7 @@ def end_game(user, game, score, game_won):
 
 
 def build_message(history_record, game):
-    """Builds the endpoint message from the history record"""
+    """Builds the endpoint message from the game and current history record"""
     msg = ""
     if history_record[0].result == 'Good guess':
         msg += "Good guess! | "
