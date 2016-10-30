@@ -1,7 +1,6 @@
-# import logging
+
 import endpoints
 import math
-# from google.appengine.ext import ndb
 
 from models import User, HistoryRecord, Game, Score
 
@@ -40,7 +39,6 @@ def handle_right_answer(user, game, score, user_guess):
             for j in range(0,len(current_game_list)):
                 if answer_list[j] == i:
                     current_game_list[j]= user_guess
-    # msg += "Good guess! | "
     msg = "Good guess! | "
     result = "Good guess" # will be passed into the history record
     game.current_game = ""
@@ -48,11 +46,14 @@ def handle_right_answer(user, game, score, user_guess):
         game.current_game += str(current_game_list[k]) + " "
 
     if current_game_list == answer_list:
-        end_game(user, game, score, True, msg, user_guess)
-    else:
-        update_values(user, game, score, result, msg, user_guess)
+        game_state = end_game(user, game, score, True, msg, user_guess)
+        user = game_state.get('user')
+        game = game_state.get('game')
+        score = game_state.get('score')
+        msg = game_state.get('msg')
+    game_state = update_values(user, game, score, result, msg, user_guess)
 
-    return (game, msg)
+    return game_state
 
 
 
@@ -63,20 +64,23 @@ def handle_wrong_answer(user, game, score, user_guess):
     game.strikes_left -= 1
     game.mistakes_made += 1
     score.mistakes_made += 1
-    # msg += "Wrong guess... | "
+    user_guess = user_guess
     msg = "Wrong guess... | "
     result = "Wrong guess" # will be passed into the history record
     if game.strikes_left == 0:
-        end_game(user, game, score, False, msg)
-    else:
-        # update_values(user, game, score, result)
-        update_values(user, game, score, result, msg, user_guess)
+        game_state = end_game(user, game, score, False, msg, user_guess)
+        user = game_state.get('user')
+        game = game_state.get('game')
+        score = game_state.get('score')
+        msg = game_state.get('msg')
 
-    return (game, msg)
+    game_state = update_values(user, game, score, result, msg, user_guess)
+
+    return game_state
 
 
 def end_game(user, game, score, game_won, message, user_guess):
-    """ Method finalises the gane and updates the various entities"""
+    """ Method finalises the game and updates the various entities"""
     msg = message
     if game_won == True:
         game.game_won = True
@@ -85,13 +89,15 @@ def end_game(user, game, score, game_won, message, user_guess):
         score.game_status = "Won"
         score.final_score = rate_game(score)
         user.total_score += score.final_score
+        msg += "YOU WON!"
     else:
         game.game_over = True
         game.game_won = False
         score.game_over = True
+        msg += "YOU LOST!"
 
-    # update_values(user, game, score)
-    update_values(user, game, score, "", msg, user_guess)
+    game_state = {'user':user, 'game':game, 'score':score, 'msg':msg}
+    return game_state
 
 
 def update_values(user, game, score, result, message, user_guess):
@@ -117,14 +123,10 @@ def update_values(user, game, score, result, message, user_guess):
     msg += game.current_game + " | " 
     msg += "Strike(s) left: " + str(game.strikes_left) + " | "
 
-    if game.game_over == 1:
-        if game.game_won == 1:
-            msg += "YOU WON!"
-        if game.game_won == 0:
-            msg += "YOU LOST!"
-    else:
-        msg += "Carry on!"
+    msg += "Carry on!"
 
-    return (game, msg)
+    game_state = {'game': game, 'msg': msg}
+
+    return game_state
             
 
