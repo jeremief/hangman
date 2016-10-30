@@ -39,20 +39,18 @@ def handle_right_answer(user, game, score, user_guess):
             for j in range(0,len(current_game_list)):
                 if answer_list[j] == i:
                     current_game_list[j]= user_guess
-    # msg = "Good guess! | "
     result = "Good guess" # will be passed into the history record
     game.current_game = ""
     for k in range(0,len(current_game_list)):
         game.current_game += str(current_game_list[k]) + " "
 
     if current_game_list == answer_list:
-        # game_state = end_game(user, game, score, True, msg, user_guess)
-        game_state = end_game(user, game, score, True, user_guess)
+        # game_state = end_game(user, game, score, True, user_guess)
+        game_state = end_game(user, game, score, True)
         user = game_state.get('user')
         game = game_state.get('game')
         score = game_state.get('score')
         msg = game_state.get('msg')
-    # game_state = update_values(user, game, score, result, msg, user_guess)
     game_state = update_values(user, game, score, result, user_guess)
 
     return game_state
@@ -65,26 +63,23 @@ def handle_wrong_answer(user, game, score, user_guess):
     game.mistakes_made += 1
     score.mistakes_made += 1
     user_guess = user_guess
-    # msg = "Wrong guess... | "
     result = "Wrong guess" # will be passed into the history record
     if game.strikes_left == 0:
-        # game_state = end_game(user, game, score, False, msg, user_guess)
-        game_state = end_game(user, game, score, False, user_guess)
+        # game_state = end_game(user, game, score, False, user_guess)
+        game_state = end_game(user, game, score, False)
         user = game_state.get('user')
         game = game_state.get('game')
         score = game_state.get('score')
         msg = game_state.get('msg')
 
-    # game_state = update_values(user, game, score, result, msg, user_guess)
     game_state = update_values(user, game, score, result, user_guess)
 
     return game_state
 
 
-# def end_game(user, game, score, game_won, message, user_guess):
-def end_game(user, game, score, game_won, user_guess):
+# def end_game(user, game, score, game_won, user_guess):
+def end_game(user, game, score, game_won):
     """ Method finalises the game and updates the various entities"""
-    # msg = message
     if game_won == True:
         game.game_won = True
         game.game_over = True
@@ -97,7 +92,6 @@ def end_game(user, game, score, game_won, user_guess):
         game.game_won = False
         score.game_over = True
 
-    # game_state = {'user':user, 'game':game, 'score':score, 'msg':msg}
     game_state = {'user':user, 'game':game, 'score':score}
     return game_state
 
@@ -124,7 +118,6 @@ def build_message(history_record, game):
     return msg
 
 
-# def update_values(user, game, score, result, message, user_guess):
 def update_values(user, game, score, result, user_guess):
     """ Saves all entities to the datastore at the end of a turn and 
     returns a dictionary containinig the game in its current state as well 
@@ -147,17 +140,6 @@ def update_values(user, game, score, result, user_guess):
     user.put()
 
     msg = build_message(history_record, game)
-
-    # msg += game.current_game + " | " 
-    # msg += "Strike(s) left: " + str(game.strikes_left) + " | "
-
-    # if game.game_over == False:
-    #     msg += "Carry on!"
-    # if game.game_over == True:
-    #     if game.game_won == True:
-    #         msg += "YOU WON!"
-    #     else:
-    #         msg += "YOU LOST!"
 
     game_state = {'game': game, 'msg': msg}
 
