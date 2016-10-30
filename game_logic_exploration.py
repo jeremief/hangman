@@ -2,19 +2,6 @@ import random
 
 # ------------------------ SETTING UP MODELS -------------------------------
 
-# class Player(object):
-#     """Player profile"""
-
-# class Game(object):
-#     """Game variables"""
-
-
-# class History(object):
-#    """docstring for History"""
-        
-# class Score(object):
-#    """docstring for Score"""
-
 def display_current_game(current_game):
     display = ""
     for i in current_game:
@@ -110,9 +97,7 @@ while current_game != answer and game_over !=1:
                     won = 0
         else:
             game_cancelled = 1
-            game_over = 1
-
-    
+            game_over = 1   
 
 
  

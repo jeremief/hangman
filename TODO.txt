@@ -4,12 +4,12 @@
 
 3- Implement following extensions:
  * get_user_games (returns all the user's active games) - Done
- * cancel_game
- * get_high_scores
- * get_user_rankings
- * get_game_history
+ * cancel_game - Done
+ * get_high_scores - Done
+ * get_user_rankings - Done
+ * get_game_history - Done
 
-4- Implement notifications of unfinished games
+4- Implement notifications of unfinished games - Done
 
 5- Write README
 
