@@ -89,12 +89,10 @@ def end_game(user, game, score, game_won, message, user_guess):
         score.game_status = "Won"
         score.final_score = rate_game(score)
         user.total_score += score.final_score
-        msg += "YOU WON!"
     else:
         game.game_over = True
         game.game_won = False
         score.game_over = True
-        msg += "YOU LOST!"
 
     game_state = {'user':user, 'game':game, 'score':score, 'msg':msg}
     return game_state
@@ -123,7 +121,15 @@ def update_values(user, game, score, result, message, user_guess):
     msg += game.current_game + " | " 
     msg += "Strike(s) left: " + str(game.strikes_left) + " | "
 
-    msg += "Carry on!"
+    if game.game_over == False:
+        msg += "Carry on!"
+    if game.game_over == True:
+        if game.game_won == True:
+            msg += "YOU WON!"
+        else:
+            msg += "YOU LOST!"
+
+
 
     game_state = {'game': game, 'msg': msg}
 
