@@ -1,1 +1,23 @@
 
+THE DESIGN OF HANGMAN - A UDACITY FSND PROJECT 
+----------------------------------------------
+
+
+This project took me about four weeks to complete and consisted of three phases:
+
+- The first phase was to play with the Guess-A-Number project to wrap my head around the different concepts.
+
+- The second phase was about making the first decision of picking a game to implement. I chose hangman and decided to explore the implications of the game before fully launching into the project. 
+As I wanted to be free to explore the game's concepts without worrying about the seperate issue of its API implementation, I wrote a single-file game called game_logic_exploration.py. This was a double-edge sword kind of decision as it proved to be both useful and deceiving.
+
+- The third and final phase was the actual implementation. I started from the Guess-A-Number skeleton files and modified and built them up follwing the task-list provided in the instructions.
+
+
+Main learning: don't wait until the end to refactor.
+In order to get everything working as quickly as possible, I copied and pasted most of the game_logic_exploration.py in to my play_turn endpoint. This was useful because it got the game working rather quickly. However, it was deceiving because I used the file as-is to build the entire game.
+When everything was said and done, I ended up with a function that was over 80 lines long, i.e. rather hard to maintain and debug.
+
+Therefore, I had to go through a painful process of refactoring.
+
+
+
