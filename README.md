@@ -1,7 +1,7 @@
 HANGMAN
 =======
 
-![Alt text](/images/Screenshot.png?raw=true "Hangman API")
+![Alt text](/images/Screenshot/Screenshot.png?raw=true "Hangman API")
 
 
 1. Description
