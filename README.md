@@ -39,6 +39,7 @@ Your folder should contain eleven files and one folder called "Images".
 The "Images" folder contains the picture used on this page.
 
 
+
 3. How to get started 
 ---------------------
 
@@ -46,6 +47,16 @@ The "Images" folder contains the picture used on this page.
 
 4. Rules and scoring
 --------------------
+The rules of Hangman are fairly simple. You have to guess a word by proposing letters to the API. If the letter does form part of the word, it will be integrated in the solution that is progressively revieled.
+If your guess is incorrect, you get a strike.
+If you use all your strikes, you lose. If you guess the word without using all your strikes, you win.
+
+The scoring is a bit complex and attempts to recognise the fact that longer words with few mistakes should obtain a better score than shorter words with no mistake. The number of points is only calculated for finished games that have been won. There are no points awarded for games have been lost, cancelled or left incomplete.
+
+The scoring formula is based on the number of unique letters and the number of mistakes made:
+(number of unique letters ^ number of unique letters) * ( 1-(number mistakes / number of unique letters))
+
+This formula ensures that players are rewarded for playing harder games with longer words.
 
 
 
@@ -92,6 +103,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 
 
 8. About
