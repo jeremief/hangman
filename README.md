@@ -42,6 +42,20 @@ The "images" folder contains the picture used on this page.
 
 3. How to get started 
 ---------------------
+#### Running locally
+You can use Google's API Explorer to play the game on localhost. You will still need an internet connection for the API explorer to work though.
+
+Once you have installed the SDK and the Google App Engine Laucher, open the latter.
+Click on File then on Add an exisitng application. Browse to the folder that contains the game files
+Once you application appears in your list of applications, highlight Hangman and press the Run button.
+Once it is running, press the Browse button and it will open a session in your browser.
+Add "/_ah/api/explorer" at the end of the url to use the api explorer. You may need to authorise "unsafe scripts" in your browser as the API explorer doesn't like applications not starting from https, which tends to be the case for localhost instances.
+
+Once you have been through all this, you can now create users, games and play Hangman.
+
+#### Running online
+Having installed all the Google elements mentioned above, you can create a projet in Google cloud and use its ID in place of the one provided here.
+Once you are ready, click the Deploy button. When the application is done deploying, you can go to your url and follow the same procedure to use the api explorer.
 
 
 
@@ -62,7 +76,7 @@ This formula ensures that players are rewarded for playing harder games with lon
 
 5. Endpoints and urls description 
 --------------------------------
-## Endpoints
+#### Endpoints
 * create_user: takes a username and email to create a unique user
 * create_new_game: takes an existing user name as well as an answer and a number of strikes to create a new game
 * play_turn: takes a urlsafe game key and a guess to play a round of Hangman. This is effectively the main component of the game.
@@ -74,7 +88,7 @@ This formula ensures that players are rewarded for playing harder games with lon
 * get_user_rankings: returns a list of all users sorted by their score
 * get_game_history: takes a urlsafe game key to return a history of all turns played in a game
 
-## Urls
+#### Urls
 * /crons/send_reminder: activates the cron file
 
 
