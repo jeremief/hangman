@@ -21,22 +21,22 @@ You will also need to install the [Google App Engine SDK](https://cloud.google.c
 
 Once the directory has been downloaded, use your command line tool to navigate to the folder containing the application.
 
-Your folder should contain eleven files and one folder called "Images".
+Your folder should contain eleven files and one folder called "images".
 
-* Design.txt:
-* README.md:
-* api.py:
-* app.yaml:
-* cron.yaml:
-* game_logic.py:
-* game_logic_exploration.py:
-* index.yaml:
-* main.py:
-* models.py:
-* utils.py:
+* Design.txt: a document explaining the thinking behind the decisions made for the design of this game.
+* README.md: a copy of this document.
+* api.py: the main api file that powers the server.
+* app.yaml: ties all dependencies together for App Engine.
+* cron.yaml: lists which cron routines are run and how often they are. 
+* game_logic.py: powers the play_turn api endpoint
+* game_logic_exploration.py: a self-contained python exploration of the game. You can play it using the command line.
+* index.yaml: file keeping track of indexes for App Engine
+* main.py: defines handlers for requests to urls. In our case, it hadles the email reminders triggered by the cron file.
+* models.py: contains the class definition of all custom objects used in the game
+* utils.py: contains a couple of methods that help run the game without really being part of its actual logic
 
 
-The "Images" folder contains the picture used on this page.
+The "images" folder contains the picture used on this page.
 
 
 
