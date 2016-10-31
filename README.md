@@ -60,18 +60,22 @@ This formula ensures that players are rewarded for playing harder games with lon
 
 
 
-5. Enpoints and urls description 
+5. Endpoints and urls description 
 --------------------------------
-* create_user:
-* create_new_game:
-* play_turn:
-* get_user_scores:
-* get_scores:
-* get_user_games:
-* cancel_game:
-* get_high_scores:
-* get_user_rankings:
-* get_game_history:
+## Endpoints
+* create_user: takes a username and email to create a unique user
+* create_new_game: takes an existing user name as well as an answer and a number of strikes to create a new game
+* play_turn: takes a urlsafe game key and a guess to play a round of Hangman. This is effectively the main component of the game.
+* get_user_scores: returns all scores for an existing user.
+* get_scores: returns all scores for all users
+* get_user_games: returns all _active_ games for a user
+* cancel_game: takes a urlsafe game key to cancel the game attached to it. Cancelled games a retained in the datastore but cannot be altered anynore.
+* get_high_scores: returns all scores in descending order. It also take an optional parameter to limit the number of recoords returned.
+* get_user_rankings: returns a list of all users sorted by their score
+* get_game_history: takes a urlsafe game key to return a history of all turns played in a game
+
+## Urls
+* /crons/send_reminder: activates the cron file
 
 
 6. Examples
