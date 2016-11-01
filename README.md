@@ -75,7 +75,7 @@ This formula ensures that players are rewarded for playing harder games with lon
 
 
 5. Endpoints and urls description 
---------------------------------
+---------------------------------
 #### Endpoints
 * create_user: takes a username and email to create a unique user
 * create_new_game: takes an existing user name as well as an answer and a number of strikes to create a new game
@@ -93,7 +93,14 @@ This formula ensures that players are rewarded for playing harder games with lon
 
 
 
-6. Licence
+6. Future projects
+------------------
+* Add a random game generation endpoint
+* Get the reminder email to actually list the incomplete games
+
+
+
+7. Licence
 ----------
 MIT License
 
@@ -119,7 +126,7 @@ SOFTWARE.
 
 
 
-7. About
+8. About
 ---------
 Created by Jeremie Faye using code and material learned during Udacity's Full Stack Developer Nanodegree
 
