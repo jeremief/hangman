@@ -2,17 +2,18 @@ import random
 
 # ------------------------ SETTING UP MODELS -------------------------------
 
+
 def display_current_game(current_game):
     display = ""
     for i in current_game:
-        display += "%s " %i
+        display += "%s " % i
     print display
 
 
 # ------------------------ SETTING UP VARIABLES ---------------------------
 
-answers = [['tree', 'clear','white'], 
-           ['python', 'javascript', 'dentist'], 
+answers = [['tree', 'clear', 'white'],
+           ['python', 'javascript', 'dentist'],
            ['mississipi', 'waterloo', 'warringha']]
 
 difficulty_level = 0
@@ -35,13 +36,13 @@ while difficulty_level not in [1, 2, 3]:
     except:
         difficulty_level = 0
 
-answer = random.sample(answers[difficulty_level-1],1)[0]
+answer = random.sample(answers[difficulty_level-1], 1)[0]
 answer = answer.upper()
 
 answer_length = len(answer)
 
 
-for i in range (0, answer_length):
+for i in range(0, answer_length):
     current_game += "_"
 
 current_game = list(current_game)
@@ -53,7 +54,7 @@ answer = (list(answer))
 # -------------------------- PLAY GAME -------------------------------------
 
 
-while current_game != answer and game_over !=1:
+while current_game != answer and game_over != 1:
     display_current_game(current_game)
     print " "
     print "%i strike(s) left" % strikes_left
@@ -80,9 +81,9 @@ while current_game != answer and game_over !=1:
             if user_input in answer:
                 for i in answer:
                     if user_input == i:
-                        for j in range(0,len(current_game)):
+                        for j in range(0, len(current_game)):
                             if answer[j] == i:
-                                current_game[j]= user_input
+                                current_game[j] = user_input
                 print "CORRECT"
                 if current_game == answer:
                     won = 1
@@ -92,19 +93,18 @@ while current_game != answer and game_over !=1:
                 print "WRONG"
                 strikes_left -= 1
                 print " "
-                if strikes_left == 0 :
+                if strikes_left == 0:
                     game_over = 1
                     won = 0
         else:
             game_cancelled = 1
-            game_over = 1   
+            game_over = 1
 
 
- 
 # --------------------------- END GAME -------------------------------------
 
 if won == 1:
-    print "YOU WON"       
+    print "YOU WON"
 if won == 0 and game_cancelled == 0:
     print "YOU LOST"
 else:

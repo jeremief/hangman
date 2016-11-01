@@ -3,9 +3,6 @@
 import logging
 from google.appengine.ext import ndb
 import endpoints
-# import math
-
-# from models import User, HistoryRecord, Game, Score
 
 
 def get_by_urlsafe(urlsafe, model):
@@ -20,7 +17,7 @@ def get_by_urlsafe(urlsafe, model):
         The entity that the urlsafe Key string points to or None if no entity
         exists.
     Raises:
-        ValueError:""" 
+        ValueError:"""
     try:
         key = ndb.Key(urlsafe=urlsafe)
         print "Key allocated to key"
@@ -47,7 +44,7 @@ def get_by_urlsafe(urlsafe, model):
 
 def validate_input(user_input, char_number=0):
     """ This function validates that user input is an alpha only string
-    of the required length. It returns a True value if the input is valid or 
+    of the required length. It returns a True value if the input is valid or
     a list containing a False value and error message if it is invalid."""
     user_input_valid = True
     function_message = ""
@@ -66,8 +63,7 @@ def validate_input(user_input, char_number=0):
             else:
                 function_message += "Only one character please..."
             user_input_valid = False
-    if user_input_valid == True:
+    if user_input_valid is True:
         return [True]
     else:
         return [False, function_message]
-

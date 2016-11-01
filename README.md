@@ -51,7 +51,11 @@ Once you application appears in your list of applications, highlight Hangman and
 Once it is running, press the Browse button and it will open a session in your browser.
 Add "/_ah/api/explorer" at the end of the url to use the api explorer. You may need to authorise "unsafe scripts" in your browser as the API explorer doesn't like applications not starting from https, which tends to be the case for localhost instances.
 
-Once you have been through all this, you can now use the api explorer and create users, games and play Hangman.
+Once you have been through all this, you can now use the api explorer and create users, games and play Hangman:
+
+* Use the create_user endpoint to create a new user. Take note of the user name.
+* Use the create_game endpoint to create a new game. Enter the game's answer, the number of allowed strikes and the user name you created earlier. Take note of the urlsafe key generated.
+* Use the play_turn api to play the game. Enter the urlsafe key you copied from the previous step and enter your guess. Good luck!
 
 #### Running online
 Having installed all the Google elements mentioned above, you can create a projet in Google cloud and use its ID in place of the one provided here.
@@ -61,7 +65,7 @@ Once you are ready, click the Deploy button. When the application is done deploy
 
 4. Rules and scoring
 --------------------
-The rules of Hangman are fairly simple. You have to guess a word by proposing letters to the API. If the letter does form part of the word, it will be integrated in the solution that is progressively revieled.
+The rules of Hangman are fairly simple. You have to guess a word by proposing letters to the API. If the letter does form part of the word, it will be integrated in the solution that is progressively revealed.
 If your guess is incorrect, you get a strike.
 If you use all your strikes, you lose. If you guess the word without using all your strikes, you win.
 
