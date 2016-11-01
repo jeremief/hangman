@@ -51,7 +51,7 @@ Once you application appears in your list of applications, highlight Hangman and
 Once it is running, press the Browse button and it will open a session in your browser.
 Add "/_ah/api/explorer" at the end of the url to use the api explorer. You may need to authorise "unsafe scripts" in your browser as the API explorer doesn't like applications not starting from https, which tends to be the case for localhost instances.
 
-Once you have been through all this, you can now create users, games and play Hangman.
+Once you have been through all this, you can now use the api explorer and create users, games and play Hangman.
 
 #### Running online
 Having installed all the Google elements mentioned above, you can create a projet in Google cloud and use its ID in place of the one provided here.
@@ -92,13 +92,8 @@ This formula ensures that players are rewarded for playing harder games with lon
 * /crons/send_reminder: activates the cron file
 
 
-6. Examples
------------
 
-
-
-
-7. Licence
+6. Licence
 ----------
 MIT License
 
@@ -124,7 +119,7 @@ SOFTWARE.
 
 
 
-8. About
+7. About
 ---------
 Created by Jeremie Faye using code and material learned during Udacity's Full Stack Developer Nanodegree
 
