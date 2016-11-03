@@ -81,14 +81,14 @@ def end_game(user, game, score, game_won):
     if game_won is True:
         game.game_won = True
         game.game_over = True
-        score.game_over = True
+        # score.game_over = True
         score.game_status = "Won"
         score.final_score = rate_game(score)
         user.total_score += score.final_score
     else:
         game.game_over = True
         game.game_won = False
-        score.game_over = True
+        # score.game_over = True
 
     game_state = {'user': user, 'game': game, 'score': score}
     return game_state
@@ -134,7 +134,8 @@ def update_values(user, game, score, result, user_guess):
 
     game.game_history += history_record
     game.put()
-    score.put()
+    if score:
+        score.put()
     user.put()
 
     msg = build_message(history_record, game)
