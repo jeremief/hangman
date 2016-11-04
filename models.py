@@ -2,8 +2,8 @@
 entities used by the Game. Because these classes are also regular Python
 classes they can include methods (such as 'to_form' and 'new_game')."""
 
-import random
-from datetime import date
+# import random
+# from datetime import date
 from protorpc import messages
 from google.appengine.ext import ndb
 
@@ -23,7 +23,7 @@ class User(ndb.Model):
 
 
 class HistoryRecord(ndb.Model):
-    """docstring for HistoryRecord"""
+    """HistoryRecord - stores the game history"""
     play_sequence = ndb.IntegerProperty(required=True)
     action = ndb.StringProperty(required=True)
     user_entry = ndb.StringProperty(required=True)
@@ -32,14 +32,14 @@ class HistoryRecord(ndb.Model):
     current_game = ndb.StringProperty(required=True)
     game_over = ndb.BooleanProperty(required=True)
     game_won = ndb.BooleanProperty(required=True)
-    game_cancelled = ndb.BooleanProperty(required=True)  
+    game_cancelled = ndb.BooleanProperty(required=True)
 
 
 class Game(ndb.Model):
     """Game structure"""
     user = ndb.KeyProperty(required=True, kind='User')
     answer = ndb.StringProperty(required=True)
-    strikes_left = ndb.IntegerProperty (required=True)
+    strikes_left = ndb.IntegerProperty(required=True)
     mistakes_made = ndb.IntegerProperty(required=True)
     game_over = ndb.BooleanProperty(required=True)
     game_won = ndb.BooleanProperty(required=True)
@@ -58,7 +58,7 @@ class Game(ndb.Model):
         current_game = ""
         while i < len(answer):
             current_game += "_ "
-            i += 1 
+            i += 1
 
         game = Game(user=user,
                     answer=answer.upper(),
@@ -100,7 +100,6 @@ class Game(ndb.Model):
         return form
 
 
-
 class Score (ndb.Model):
     """Score keeping structure"""
     user = ndb.KeyProperty(required=True, kind='User')
@@ -113,7 +112,7 @@ class Score (ndb.Model):
 
     @classmethod
     def create_new_score_models(cls, user, game):
-        
+        """This method creates a score object and puts it to the datastore"""
         count_unique_letters = 0
         unique_letters = ""
         game_letters = list(game.answer)
@@ -150,7 +149,7 @@ class StringMessage(messages.Message):
 
 
 class NewGameForm(messages.Message):
-    """ NewGameForm: used to capture the new game request. It will then be used 
+    """ NewGameForm: used to capture the new game request. It will then be used
     to post in """
     user_name = messages.StringField(1, required=True)
     answer = messages.StringField(2, required=True)
@@ -176,7 +175,7 @@ class PlayTurnForm(messages.Message):
 
 class ScoreForm(messages.Message):
     """ScoreForm: used to return a response containing a game's score"""
-    user_name = messages.StringField(1, required=True) 
+    user_name = messages.StringField(1, required=True)
     urlsafe_key = messages.StringField(2, required=True)
     unique_letters = messages.IntegerField(3, required=True)
     mistakes_made = messages.IntegerField(4, required=True)
@@ -193,7 +192,7 @@ class ScoreForms(messages.Message):
 class GameForms(messages.Message):
     """Returns multiple GameForms"""
     items = messages.MessageField(GameForm, 1, repeated=True)
-        
+
 
 class UserForm(messages.Message):
     """docstring for UserForm"""
@@ -204,7 +203,7 @@ class UserForm(messages.Message):
 class UserForms(messages.Message):
     """Returns multiple UserForms"""
     items = messages.MessageField(UserForm, 1, repeated=True)
-        
+
 
 class HistoryForm(messages.Message):
     """HistoryForm"""
@@ -221,12 +220,3 @@ class HistoryForm(messages.Message):
 class HistoryForms(messages.Message):
     """Returns multiple HistoryForms"""
     items = messages.MessageField(HistoryForm, 1, repeated=True)
-        
-                                  
-        
-        
-
-
-        
-        
-        
