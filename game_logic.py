@@ -2,13 +2,13 @@
 import endpoints
 import math
 
-from models import User, HistoryRecord, Game, Score
+from models import HistoryRecord
 
 
 def rate_game(score):
     """This function rates the game after a win"""
     final_score = int((math.pow(score.unique_letters, score.unique_letters) *
-                      (1-(score.mistakes_made / score.unique_letters))))
+                      (1 - (score.mistakes_made / score.unique_letters))))
     return final_score
 
 
@@ -49,7 +49,6 @@ def handle_right_answer(user, game, score, user_guess):
         user = game_state.get('user')
         game = game_state.get('game')
         score = game_state.get('score')
-        msg = game_state.get('msg')
     game_state = update_values(user, game, score, result, user_guess)
 
     return game_state
@@ -68,7 +67,6 @@ def handle_wrong_answer(user, game, score, user_guess):
         user = game_state.get('user')
         game = game_state.get('game')
         score = game_state.get('score')
-        msg = game_state.get('msg')
 
     game_state = update_values(user, game, score, result, user_guess)
 
@@ -81,14 +79,12 @@ def end_game(user, game, score, game_won):
     if game_won is True:
         game.game_won = True
         game.game_over = True
-        # score.game_over = True
         score.game_status = "Won"
         score.final_score = rate_game(score)
         user.total_score += score.final_score
     else:
         game.game_over = True
         game.game_won = False
-        # score.game_over = True
 
     game_state = {'user': user, 'game': game, 'score': score}
     return game_state
