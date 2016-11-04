@@ -5,28 +5,34 @@ move game logic to another file. Ideally the API will be simple, concerned
 primarily with communication to/from the API's users."""
 
 
-import logging
 import endpoints
 
 from protorpc import remote, messages
-from google.appengine.api import memcache
-from google.appengine.api import taskqueue
 
 from models import User, HistoryRecord, Game, Score
-from models import (StringMessage, NewGameForm, GameForm, PlayTurnForm,
-                    ScoreForm, ScoreForms, GameForms, UserForm, UserForms,
-                    HistoryForm, HistoryForms)
+from models import (StringMessage,
+                    NewGameForm,
+                    GameForm,
+                    PlayTurnForm,
+                    ScoreForms,
+                    GameForms,
+                    UserForms,
+                    HistoryForms)
 
 from utils import get_by_urlsafe, validate_input
-from game_logic import (rate_game, validate_guess, handle_right_answer,
+from game_logic import (validate_guess,
+                        handle_right_answer,
                         handle_wrong_answer)
 
 
-USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(1, required=True),
-                                           email=messages.StringField(2, required=True))
+USER_REQUEST = endpoints.ResourceContainer(user_name=messages.StringField(
+                                           1, required=True),
+                                           email=messages.StringField(
+                                           2, required=True))
 NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
 PLAY_TURN_REQUEST = endpoints.ResourceContainer(PlayTurnForm,
-                                                urlsafe_game_key=messages.StringField(1))
+                                                urlsafe_game_key=messages.
+                                                StringField(1))
 SIMPLE_USER_REQUEST = endpoints.ResourceContainer(
     user_name=messages.StringField(1))
 SIMPLE_GAME_REQUEST = endpoints.ResourceContainer(
@@ -76,12 +82,12 @@ class HangmanApi(remote.Service):
                                             game_cancelled=False)]
             game = Game.create_new_game_models(
                 user.key, request.answer, request.strikes, history_record)
-            score = Score.create_new_score_models(user, game)
+            Score.create_new_score_models(user, game)
         except ValueError:
             raise endpoints.BadRequestException(
                 'You really need a positive number of strikes')
         input_validation = validate_input(game.answer)
-        if input_validation[0] == True:
+        if input_validation[0] is True:
             return game.to_form('Have fun playing Hangman!')
         else:
             raise endpoints.BadRequestException(input_validation[1])
@@ -112,8 +118,6 @@ class HangmanApi(remote.Service):
             raise endpoints.BadRequestException(input_validation[1])
         else:
             answer_valid = validate_guess(game, user_guess)
-            current_game_list = list(game.current_game.replace(" ", ""))
-            answer_list = list(game.answer)
 
             if answer_valid is True:
                 game_state = handle_right_answer(user, game, score, user_guess)
@@ -209,7 +213,8 @@ class HangmanApi(remote.Service):
                       name='get_high_scores',
                       http_method='GET')
     def get_high_scores(self, request):
-        """Returns a list of scores sorted by final_score in descending order"""
+        """Returns a list of scores sorted by final_score in
+        descending order"""
         try:
             count_of_results = int(request.number_of_results)
             if count_of_results == 0:
@@ -217,7 +222,8 @@ class HangmanApi(remote.Service):
                                      'Won').order(-Score.final_score).fetch()
             else:
                 scores = Score.query(
-                    Score.game_status == 'Won').order(-Score.final_score).fetch(limit=count_of_results)
+                    Score.game_status == 'Won').order(
+                    -Score.final_score).fetch(limit=count_of_results)
             print scores
             return ScoreForms(items=[score.to_form() for score in scores])
         except:
