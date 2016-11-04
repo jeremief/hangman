@@ -76,6 +76,8 @@ The scoring formula is based on the number of unique letters and the number of m
 
 This formula ensures that players are rewarded for playing harder games with longer words.
 
+Players are then ranked in descending order of their score.
+
 
 
 5. Endpoints and urls description 
