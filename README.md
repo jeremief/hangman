@@ -155,17 +155,13 @@ Players are then ranked in descending order of their score.
 
 
 #### Models:
-* User:
-  - Stores unique user_name and email address.
+* User: stores unique user_name, email address and final score.
     
-* Game:
-  - Stores unique game states. Associated with User model via KeyProperty.
+* Game: stores unique game states. Associated with User model via KeyProperty.
     
-* HistoryRecord: 
-  - Records the results at the end of each turn played. It is a structured property of a Game.
+* HistoryRecord: records the results at the end of each turn played. It is a structured property of a Game.
 
-* Score:
-  - Records completed games. Associated with Users model via KeyProperty.
+* Score: records completed games. Associated with Users model via KeyProperty.
     
 
 #### Forms:
@@ -183,11 +179,11 @@ Players are then ranked in descending order of their score.
 
 * PlayTurnForm: inbound make move form (guess)
 
-* ScoreForm: Representation of a completed game's Score (user_name, urlsafe_key, unique_letters, mistakes_made, game_over, game_status, final_score).
+* ScoreForm: representation of a completed game's Score (user_name, urlsafe_key, unique_letters, mistakes_made, game_over, game_status, final_score).
 
 * ScoreForms: multiple ScoreForm container.
 
-* HistoryForm
+* HistoryForm: stores all they key variables in their state after a turn has been played (sequence, action, user_entry, result, current_game, game_over, game_won, game,cancelled)  
 
 * HistoryForms: multiple HistoryForm conatiner.
 
