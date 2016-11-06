@@ -80,19 +80,117 @@ Players are then ranked in descending order of their score.
 
 
 
-5. Endpoints and urls description 
----------------------------------
+5. Endpoints, models, forms and urls description 
+------------------------------------------------
 #### Endpoints
 * create_user: takes a username and email to create a unique user
+  - Path: 'user'
+  - Method: POST
+  - Parameters: user_name, email
+  - Returns: A sting confirming that the user has been created
+  - Description: creates a user and returns a message confiming the user's creation
+
 * create_new_game: takes an existing user name as well as an answer and a number of strikes to create a new game
-* play_turn: takes a urlsafe game key and a guess to play a round of Hangman. This is effectively the main component of the game.
-* get_user_scores: returns all scores for an existing user.
+  - Path: 'game'
+  - Method: POST
+  - Parameters: user_name, answer, strikes
+  - Returns: A GameForm message
+  - Description: creates a game and returns a GameForm message with the gam's initial state
+
+* play_turn: 
+  - Path: 'game/{urlsafe_game_key}'
+  - Method: PUT
+  - Parameters: urlsafe game key, guess
+  - Returns: A GameForm with the current game state
+  - Description: takes a urlsafe game key and a guess to play a round of Hangman. This is effectively the main component of the game.
+
+* get_user_scores: 
+  - Path: scores/user/{user_name}'
+  - Method: GET
+  - Parameters: user_name
+  - Returns: a list of ScoreForms containing a player's scores
+  - Description: returns all scores for an existing user.
+
 * get_scores: returns all scores for all users
+  - Path: 'scores'
+  - Method: GET
+  - Parameters: None
+  - Returns: a list of ScoreForms containing all players' scores
+  - Description: returns all scores for an existing user.
+
 * get_user_games: returns all _active_ games for a user
-* cancel_game: takes a urlsafe game key to cancel the game attached to it. Cancelled games a retained in the datastore but cannot be altered anynore.
-* get_high_scores: returns all scores in descending order. It also take an optional parameter to limit the number of recoords returned.
+  - Path: 'active_games/user/{user_name}''
+  - Method: GET
+  - Parameters: user_name
+  - Returns: a list of GameForms all active games for a user 
+  - Description: returns all active games for a user 
+
+* cancel_game: 
+  - Path: 'game/cancel/{urlsafe_game_key}'
+  - Method: GET
+  - Parameters: urlsafe game key
+  - Returns: A sting confirming that the game has been cancelled
+  - Description: takes a urlsafe game key to cancel the game attached to it. Cancelled games are retained in the datastore but cannot be altered anynore.
+
+* get_high_scores: 
+  - Path: 'high_scores'
+  - Method: GET
+  - Parameters: None, number of scores (optional)
+  - Returns: a list of scores in descending order
+  - Description: returns all scores in descending order. It also take an optional parameter to limit the number of recoords returned.
+
 * get_user_rankings: returns a list of all users sorted by their score
-* get_game_history: takes a urlsafe game key to return a history of all turns played in a game
+  - Path: 'ranking'
+  - Method: GET
+  - Parameters: None
+  - Returns: a list of UserForms sorted by socre descending order
+  - Description: returns a list of all users sorted by their score
+
+* get_game_history: 
+  - Path: 'game/history/{urlsafe_game_key}'
+  - Method: GET
+  - Parameters: urlsafe game key
+  - Returns: a list of HistoryForms containing the detailed history of each game
+  - Description: takes a urlsafe game key to return a history of all turns played in a game
+
+
+#### Models:
+* User:
+  - Stores unique user_name and email address.
+    
+* Game:
+  - Stores unique game states. Associated with User model via KeyProperty.
+    
+* HistoryRecord: 
+  - Records the results at the end of each turn played. It is a structured property of a Game.
+
+* Score:
+  - Records completed games. Associated with Users model via KeyProperty.
+    
+
+#### Forms:
+* StringMessage : general purpose String container.
+
+* UserForm: representation of a user (name, email, total_score)
+
+* UserForms: multiple UserForm container.
+
+* NewGameForm: used to create a new game (user_name, answer, strikes)
+
+* GameForm: representation of a Game's state (urlsafe_key, strikes, mistakes, game_over, game_won, game_cancelled, message, user_name).
+
+* GameForms: multiple GameForm container.
+
+* PlayTurnForm: inbound make move form (guess)
+
+* ScoreForm: Representation of a completed game's Score (user_name, urlsafe_key, unique_letters, mistakes_made, game_over, game_status, final_score).
+
+* ScoreForms: multiple ScoreForm container.
+
+* HistoryForm
+
+* HistoryForms: multiple HistoryForm conatiner.
+
 
 #### Urls
 * /crons/send_reminder: activates the cron file
