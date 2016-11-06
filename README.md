@@ -171,7 +171,7 @@ Players are then ranked in descending order of their score.
 
 * UserForms: multiple UserForm container.
 
-* NewGameForm: used to create a new game (user_name, answer, strikes)
+* NewGameForm: used to create a new game (user_name, answer, strikes (defaults to five if not provided))
 
 * GameForm: representation of a Game's state (urlsafe_key, strikes, mistakes, game_over, game_won, game_cancelled, message, user_name).
 
@@ -197,6 +197,7 @@ Players are then ranked in descending order of their score.
 ------------------
 * Add a random game generation endpoint
 * Get the reminder email to actually list the incomplete games
+* Refactoring models.py into a python package
 
 
 
